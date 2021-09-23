@@ -13,6 +13,7 @@ public class Position {
     
     private int col; // x axis
     private int row; // y axis
+    private int index; // position in a 1-D array
     
     // Chess algebraic notation is expressed as "[file][rank]", from the
     // perspective of white. Left-most file (column) is "a", and the bottom 
@@ -58,6 +59,9 @@ public class Position {
         this.col = col;
         this.row = row;
         
+        // calculate index
+        this.index = row*8 + col;
+        
         // calculate algebraic notation
         this.algebraic = cartesianToAlgebraic(col, row);
     }
@@ -73,6 +77,7 @@ public class Position {
         String coords = algebraicToCartesian(algebraic);
         this.col = coords.charAt(0) - '0';
         this.row = coords.charAt(1) - '0';
+        this.index = row*8 + col;
     }
 
     public void setRow(int row) {
@@ -86,10 +91,11 @@ public class Position {
     public void setAlgebraic(String algebraic) {
         this.algebraic = algebraic;
     }
-
+    
+    
     @Override
     public String toString() {
-        return String.format("Algebraic: %s, Cartesian: (%d, %d)", algebraic, col, row);
+        return String.format("Algebraic: %s, Cartesian: (%d, %d), Index: %d", algebraic, col, row, index);
     }
 
     public int getRow() {
