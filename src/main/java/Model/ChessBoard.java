@@ -6,7 +6,6 @@
 package Model;
 
 import Model.ChessPiece;
-import java.util.HashMap;
 import Model.Type;
 /**
  *
@@ -14,16 +13,59 @@ import Model.Type;
  */
 public class ChessBoard {
     
-    private final static String DEFAULT_FEN = "r3k2r/pp1b1ppp/1qnbpn2/2ppN3/3P1B2/1QPBP3/PP1N1PPP/R4RK1 w kq - 0 1";
-    private String fen;
-    
+    private final static String DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    private String fen; // = r3k2r/pp1b1ppp/1qnbpn2/2ppN3/3P1B2/1QPBP3/PP1N1PPP/R4RK1 w kq - 0 1
+    public char[] pieceMap = new char[64];
+    boolean activePiece;
     
     public ChessBoard() {
         this.fen = DEFAULT_FEN;
+        this.activePiece = true; // true = white, false = black
     }
     
     public ChessBoard(String fen) {
         this.fen = fen;
+    }
+    
+    public void buildBoard() {
+        String fenSplit[] = fen.split(" ");
+        String fenBoard = fenSplit[0];
+        this.activePiece = (fenSplit[1] == "w") ? true : false;
+        
+        int row = 0;
+        int col = 0;
+        int fen_len = fenBoard.length();
+        int index;
+        char c;
+        
+        
+        for (int i = 0; i < fen_len; ++i) {
+            c = fenBoard.charAt(i);
+            index = row*8 + col;
+            
+            if (c == '/') {
+                row++;
+                col = 0;
+            }
+            
+            else if (Character.isLetter(c)) {
+                pieceMap[index] = c;
+                col++;
+                //System.out.println(String.format("c: %d, col: %d", c, col));
+            }
+            
+            else if (Character.isDigit(c)) {
+                for (int j = 0; j < c-'0'; ++j) {
+                    //pieceMap[index] = (char)(col + '0');
+                    pieceMap[index] = '.';
+                    col++;
+                    index++;
+                }
+            }
+            else {
+                System.out.println("something went wrong");
+            }
+        }
     }
 
     @Override
