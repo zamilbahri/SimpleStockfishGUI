@@ -109,5 +109,11 @@ public class Position {
     public String getAlgebraic() {
         return algebraic;
     }
+
+    public int getIndex() {
+        return index;
+    }
+    
+    
     
 }

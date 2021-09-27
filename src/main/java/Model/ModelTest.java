@@ -17,10 +17,13 @@ public class ModelTest {
     public static void main(String args[]) {
         
         
-        Position p1 = new Position("a3");
-        Position p2 = new Position("f3");
-        Position p3 = new Position("a7");
+        Position p1 = new Position("e2");
+        Position p2 = new Position("e4");
+        System.out.println(p1.toString());
+        System.out.println(p2.toString());
         
+        
+        /*
         ChessPiece rookW = new Rook(true, p1);
         
         System.out.println(String.format("Path from %s to %s", p1.getAlgebraic(), p3.getAlgebraic()));
@@ -33,5 +36,19 @@ public class ModelTest {
         
         ChessBoard cb = new ChessBoard();
         System.out.println(cb.toString());
+        */
+        
+        //ChessBoard cb = new ChessBoard("r3k2r/pp1b1ppp/1qnbpn2/2ppN3/3P1B2/1QPBP3/PP1N1PPP/R4RK1 w kq - 0 1");
+        ChessBoard cb = new ChessBoard();
+        cb.buildBoard();
+        
+        cb.move(p1, p2);
+        System.out.println(cb.toString());
+        cb.move(new Position("d7"), new Position("d5"));
+        System.out.println(cb.toString());
+        cb.move(new Position("e4"), new Position("d5"));
+        System.out.println(cb.toString());
+        
+        System.out.println(cb.getFen());
     }
 }
