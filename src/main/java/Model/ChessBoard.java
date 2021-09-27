@@ -17,7 +17,7 @@ public class ChessBoard {
     
     private final static String DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     private String fen; // = r3k2r/pp1b1ppp/1qnbpn2/2ppN3/3P1B2/1QPBP3/PP1N1PPP/R4RK1 w kq - 0 1
-    public char[] pieceMap = new char[64];
+    private char[] pieceMap = new char[64];
     
     boolean activePiece;
     boolean whiteInCheck = false;
@@ -27,16 +27,59 @@ public class ChessBoard {
     // need to interpret this from FEN
     boolean[] castlingRights = {true, true, true, true};
     
+    /**
+     * Constructor to set up the chessboard in it's starting position
+     */
     public ChessBoard() {
         this.fen = DEFAULT_FEN;
-        this.activePiece = true; // true = white, false = black
+        buildBoard();
     }
     
+    /**
+     * Constructor to set up the chess board with a custom FEN
+     * @param fen the FEN string to set up the board with
+     */
     public ChessBoard(String fen) {
         this.fen = fen;
+        buildBoard();
     }
     
-    public void buildBoard() {
+    /**
+     * Sets a custom FEN for the chessboard, then updates the pieceMap[]
+     * @param fen the FEN string to set up the board with
+     */
+    public void setFen(String fen) {
+        this.fen = fen;
+        buildBoard();
+    }
+    
+    /**
+     * Retreive the FEN of the chessboard
+     * @return the FEN string 
+     */
+    public String getFen() {
+        return fen;
+    }
+    
+    @Override
+    /**
+     * Prints chess board in an 8x8 layout.
+     */
+    public String toString() {
+        String boardString = "";
+        for (int row = 7; row >= 0; --row) {
+            for (int col = 0; col < 8; ++col) {
+                boardString += pieceMap[row*8 + col] + " ";
+            }
+            boardString += "\n";
+        }
+        return boardString;
+    }
+    
+    /**
+     * Fills pieceMap[] based on current FEN
+     */
+    private void buildBoard() {
         String fenSplit[] = fen.split(" ");
         String fenBoard = fenSplit[0];
         this.activePiece = ("w".equals(fenSplit[1])) ? true : false;
@@ -60,7 +103,6 @@ public class ChessBoard {
             else if (Character.isLetter(c)) {
                 pieceMap[index] = c;
                 col++;
-                //System.out.println(String.format("c: %d, col: %d", c, col));
             }
             
             else if (Character.isDigit(c)) {
@@ -75,65 +117,6 @@ public class ChessBoard {
             }
         }
     }
-    /*
-    @Override
-    public String toString() {
-    // Need to make a better version of this
-        String fenBoard = fen.split(" ")[0];
-        int rank = 8;
-        int fen_len = fenBoard.length();
-        char c;
-        
-        String HORIZONTAL_LINE = "---------------------------------";
-        
-        String cols = "";
-        for (char col = 'a'; col <= 'h'; ++col) {
-            cols += "  " + col + " ";
-        }
-        
-        String boardString = cols + "\n" + HORIZONTAL_LINE + "\n| ";
-        
-        for (int i = 0; i < fen_len; ++i) {
-            c = fenBoard.charAt(i);
-            
-            if (c == '/') {
-                boardString += Integer.toString(rank) + "\n";
-                boardString += HORIZONTAL_LINE + "\n";
-                boardString += "| ";
-                rank--;
-                
-            } else {
-                if (Character.isLetter(c)) {
-                    boardString += c + " | ";
-                    
-                } else if (Character.isDigit(c)) {
-                    
-                    for (int j = 0; j < c - '0'; ++j) {
-                        boardString += " " + " | ";
-                    }
-                }
-            }
-        }
-        
-        boardString += "1\n" + HORIZONTAL_LINE;
-
-        
-        return boardString;
-    } */
-
-    @Override
-    public String toString() {
-        String boardString = "";
-        for (int row = 7; row >= 0; --row) {
-            for (int col = 0; col < 8; ++col) {
-                boardString += pieceMap[row*8 + col] + " ";
-            }
-            boardString += "\n";
-        }
-        return boardString;
-    }
-    
-    
     
     /**
      * Updates FEN, pieceMap, and activePiece based on the move. Does not have to
@@ -146,7 +129,6 @@ public class ChessBoard {
         
         pieceMap[endSquare.getIndex()] = pieceMap[startSquare.getIndex()];
         pieceMap[startSquare.getIndex()] = '.';
-        System.out.println(String.format("startRow: %s, endRow: %s", startSquare.getRow(), endSquare.getRow()));
         updateRow(startSquare.getRow());
         updateRow(endSquare.getRow());
 
@@ -156,7 +138,7 @@ public class ChessBoard {
      * 
      * @param row 
      */
-    public void updateRow(int row) {
+    private void updateRow(int row) {
                 
         String newRow = "";
         char c;
@@ -199,10 +181,6 @@ public class ChessBoard {
         fenArray[0] = fenBoardString;
         List<String> fenList = Arrays.asList(fenArray);
         this.fen = String.join(" ", fenList);
-    }
-
-    public String getFen() {
-        return fen;
     }
     
     

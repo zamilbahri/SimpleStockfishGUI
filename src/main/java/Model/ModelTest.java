@@ -40,7 +40,6 @@ public class ModelTest {
         
         //ChessBoard cb = new ChessBoard("r3k2r/pp1b1ppp/1qnbpn2/2ppN3/3P1B2/1QPBP3/PP1N1PPP/R4RK1 w kq - 0 1");
         ChessBoard cb = new ChessBoard();
-        cb.buildBoard();
         
         cb.move(p1, p2);
         System.out.println(cb.toString());
