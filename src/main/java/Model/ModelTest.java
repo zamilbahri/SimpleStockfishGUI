@@ -20,9 +20,7 @@ public class ModelTest {
         Position p1 = new Position("e2");
         Position p2 = new Position("e4");
         System.out.println(p1.toString());
-        System.out.println(p2.toString());
-        
-        
+        System.out.println(p2.toString()); 
         /*
         ChessPiece rookW = new Rook(true, p1);
         
