@@ -21,13 +21,12 @@ public class ChessBoard {
     
     public ChessPiece[] pieceMap = new ChessPiece[64];
     
-    boolean activePiece;
-    boolean whiteInCheck = false;
-    boolean blackInCheck = true;
+    boolean turn; // indicates whose turn it is - white = 0, black = 1
     
-    // WhiteKingSide, WhiteQueenSide, BlackKingSide, BlackQueenSide
-    // need to interpret this from FEN
-    boolean[] castlingRights = {true, true, true, true};
+    /** TODO:
+     * interpret castling rights from FEN
+     * interpret turn from FEN
+     */
     
     /**
      * Constructor to set up the chessboard in it's starting position
@@ -85,7 +84,6 @@ public class ChessBoard {
     private void buildBoard() {
         String fenSplit[] = fen.split(" ");
         String fenBoard = fenSplit[0];
-        this.activePiece = ("w".equals(fenSplit[1])) ? true : false;
         
         int row = 7;
         int col = 0;
@@ -175,6 +173,11 @@ public class ChessBoard {
         updateRow(startSquare.getRow());
         updateRow(endSquare.getRow());
 
+    }
+    
+    public String[] generateMoveList() {
+        
+        return new String[] {"a1b2", "c3d4"};
     }
     
     /**
