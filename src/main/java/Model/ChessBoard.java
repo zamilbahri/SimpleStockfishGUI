@@ -17,9 +17,9 @@ public class ChessBoard {
     
     private final static String DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     private String fen; // = r3k2r/pp1b1ppp/1qnbpn2/2ppN3/3P1B2/1QPBP3/PP1N1PPP/R4RK1 w kq - 0 1
-    private char[] charPieceMap = new char[64];
+    private char[] pieceMap = new char[64];
     
-    public ChessPiece[] pieceMap = new ChessPiece[64];
+    public ChessPiece[] pieces = new ChessPiece[16];
     
     boolean turn; // indicates whose turn it is - white = 0, black = 1
     
@@ -104,51 +104,51 @@ public class ChessBoard {
             else if (Character.isLetter(c)) {
                 switch (c) {
                     case 'r':
-                        pieceMap[index] = new Rook(false, new Position(index));
+                        pieces[index] = new Rook(false, new Position(index));
                         break;
                     case 'R':
-                        pieceMap[index] = new Rook(true, new Position(index));
+                        pieces[index] = new Rook(true, new Position(index));
                         break;
                     case 'n':
-                        pieceMap[index] = new Knight(false, new Position(index));
+                        pieces[index] = new Knight(false, new Position(index));
                         break;
                     case 'N':
-                        pieceMap[index] = new Knight(true, new Position(index));
+                        pieces[index] = new Knight(true, new Position(index));
                         break;
                     case 'b':
-                        pieceMap[index] = new Bishop(false, new Position(index));
+                        pieces[index] = new Bishop(false, new Position(index));
                         break;
                     case 'B':
-                        pieceMap[index] = new Bishop(true, new Position(index));
+                        pieces[index] = new Bishop(true, new Position(index));
                         break;
                     case 'q':
-                        pieceMap[index] = new Queen(false, new Position(index));
+                        pieces[index] = new Queen(false, new Position(index));
                         break;
                     case 'Q':
-                        pieceMap[index] = new Queen(true, new Position(index));
+                        pieces[index] = new Queen(true, new Position(index));
                         break;
                     case 'k':
-                        pieceMap[index] = new King(false, new Position(index));
+                        pieces[index] = new King(false, new Position(index));
                         break;
                     case 'K':
-                        pieceMap[index] = new King(true, new Position(index));
+                        pieces[index] = new King(true, new Position(index));
                         break;
                     case 'p':
-                        pieceMap[index] = new Pawn(false, new Position(index));
+                        pieces[index] = new Pawn(false, new Position(index));
                         break;
                     case 'P':
-                        pieceMap[index] = new Pawn(true, new Position(index));
+                        pieces[index] = new Pawn(true, new Position(index));
                         break;
                     default:
                         break; 
                 }
-                charPieceMap[index] = c;
+                pieceMap[index] = c;
                 col++;
             }
             
             else if (Character.isDigit(c)) {
                 for (int j = 0; j < c-'0'; ++j) {
-                    charPieceMap[index] = '.';
+                    pieceMap[index] = '.';
                     col++;
                     index++;
                 }
@@ -168,8 +168,8 @@ public class ChessBoard {
      */
     public void move(Position startSquare, Position endSquare) {
         
-        charPieceMap[endSquare.getIndex()] = charPieceMap[startSquare.getIndex()];
-        charPieceMap[startSquare.getIndex()] = '.';
+        pieceMap[endSquare.getIndex()] = pieceMap[startSquare.getIndex()];
+        pieceMap[startSquare.getIndex()] = '.';
         updateRow(startSquare.getRow());
         updateRow(endSquare.getRow());
 
@@ -191,7 +191,7 @@ public class ChessBoard {
         int emptySquareCount = 0;
         
         for (int i = 0; i < 8; ++i) {
-            c = charPieceMap[row*8 + i];
+            c = pieceMap[row*8 + i];
             
             // If square is empty
             if (c == '.') {
