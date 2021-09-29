@@ -5,10 +5,10 @@
  */
 package Model;
 
-import Model.ChessPiece;
-import Model.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Iterator;
 /**
  *
  * @author zamil
@@ -18,8 +18,7 @@ public class ChessBoard {
     private final static String DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     private String fen; // = r3k2r/pp1b1ppp/1qnbpn2/2ppN3/3P1B2/1QPBP3/PP1N1PPP/R4RK1 w kq - 0 1
     private char[] pieceMap = new char[64];
-    
-    public ChessPiece[] pieces = new ChessPiece[16];
+    public ArrayList<ChessPiece> pieces = new ArrayList<>();
     
     boolean turn; // indicates whose turn it is - white = 0, black = 1
     
@@ -55,7 +54,7 @@ public class ChessBoard {
     }
     
     /**
-     * Retreive the FEN of the chessboard
+     * Retrieve the FEN of the chessboard
      * @return the FEN string 
      */
     public String getFen() {
@@ -104,44 +103,33 @@ public class ChessBoard {
             else if (Character.isLetter(c)) {
                 switch (c) {
                     case 'r':
-                        pieces[index] = new Rook(false, new Position(index));
-                        break;
                     case 'R':
-                        pieces[index] = new Rook(true, new Position(index));
-                        break;
-                    case 'n':
-                        pieces[index] = new Knight(false, new Position(index));
-                        break;
-                    case 'N':
-                        pieces[index] = new Knight(true, new Position(index));
+                        pieces.add(new Rook(Character.isUpperCase(c), new Position(index)));
                         break;
                     case 'b':
-                        pieces[index] = new Bishop(false, new Position(index));
-                        break;
                     case 'B':
-                        pieces[index] = new Bishop(true, new Position(index));
+                        pieces.add(new Bishop(Character.isUpperCase(c), new Position(index)));
+                        break;
+                    case 'n':
+                    case 'N':
+                        pieces.add(new Knight(Character.isUpperCase(c), new Position(index)));
                         break;
                     case 'q':
-                        pieces[index] = new Queen(false, new Position(index));
-                        break;
                     case 'Q':
-                        pieces[index] = new Queen(true, new Position(index));
+                        pieces.add(new Queen(Character.isUpperCase(c), new Position(index)));
                         break;
                     case 'k':
-                        pieces[index] = new King(false, new Position(index));
-                        break;
                     case 'K':
-                        pieces[index] = new King(true, new Position(index));
+                        pieces.add(new King(Character.isUpperCase(c), new Position(index)));
                         break;
                     case 'p':
-                        pieces[index] = new Pawn(false, new Position(index));
-                        break;
                     case 'P':
-                        pieces[index] = new Pawn(true, new Position(index));
+                        pieces.add(new Pawn(Character.isUpperCase(c), new Position(index)));
                         break;
                     default:
-                        break; 
+                        break;
                 }
+
                 pieceMap[index] = c;
                 col++;
             }
@@ -163,21 +151,36 @@ public class ChessBoard {
      * Updates FEN, pieceMap, and activePiece based on the move. Does not have to
      *  be a legal move, nor does it have to be a move from activePiece. Supposed
      *  to be used in Board editor mode
-     * @param startSquare The starting square of a piece
-     * @param endSquare  The ending square of a piece
+     * @param startSquare The starting square of the move
+     * @param targetSquare  The target square of the move
      */
-    public void move(Position startSquare, Position endSquare) {
+    public void move(Position startSquare, Position targetSquare) {
+        // TODO: change pieces[]
+        Iterator<ChessPiece> iter = pieces.iterator();
         
-        pieceMap[endSquare.getIndex()] = pieceMap[startSquare.getIndex()];
+        pieceMap[targetSquare.getIndex()] = pieceMap[startSquare.getIndex()];
         pieceMap[startSquare.getIndex()] = '.';
         updateRow(startSquare.getRow());
-        updateRow(endSquare.getRow());
+        updateRow(targetSquare.getRow());
 
     }
     
-    public String[] generateMoveList() {
+    /**
+     * 
+     * @return A list of strings(?) containing the moves
+     */
+    public Move[] generateLegalMoves() {
+        // TODO: implement
         
-        return new String[] {"a1b2", "c3d4"};
+        Position exampleStartSquare1 = new Position("a2");
+        Position exampleTargetSquare1 = new Position("b3");
+        Move move1 = new Move(exampleStartSquare1, exampleTargetSquare1);
+        
+        Position exampleStartSquare2 = new Position("d2");
+        Position exampleTargetSquare2 = new Position("d4");
+        Move move2 = new Move(exampleStartSquare2, exampleTargetSquare2);
+        
+        return new Move[] {move1, move2};
     }
     
     /**
