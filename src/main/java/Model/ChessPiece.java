@@ -4,38 +4,26 @@
  * and open the template in the editor.
  */
 package Model;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 /**
  *
  * @author zamil
  */
 public abstract class ChessPiece {
-// Not sure whether to use Interface or Abstract class. Don't think it matters?
     
-    private boolean white; // true or false
-    private boolean taken;
+    private boolean isWhite; // true or false
     Position pos;
     Type type;
 
     public ChessPiece(boolean isWhite, Position pos) {
-        this.white = isWhite;
-        this.taken = false;
+        this.isWhite = isWhite;
         this.pos = pos;
     }
-
+    /**
+     * A function that indicates the colour of this piece
+     * @return true if white, false is black
+     */
     public boolean isWhite() {
-        return white;
-    }
-
-    public void take(boolean taken) {
-        this.taken = taken;
-    }
-
-    public boolean isTaken() {
-        return taken;
+        return isWhite;
     }
     
     /**
@@ -54,10 +42,17 @@ public abstract class ChessPiece {
     public abstract boolean isValidPath(Position targetPos);
     
     /**
-     * Creates an array of all Positions between current Position and targetPosition
-     * @param targetPos the position where the piece is considering moving to
-     * @return an array of Position objects of the given path
+     * Creates an array of all positions that the piece can move if the board
+     * was empty.
+     * @return the array of possible moves
      */
-    public abstract Position[] drawPath(Position targetPos);
+    public abstract Position[] generatePseudoLegalMoves();
+
+    @Override
+    public String toString() {
+        return String.format("{%s, (%s, %s), %s}", type, pos.getCol(), pos.getRow(), isWhite);
+    }
+    
+    
     
 }

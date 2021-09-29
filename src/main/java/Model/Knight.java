@@ -5,8 +5,6 @@
  */
 package Model;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author zamil
@@ -24,12 +22,20 @@ public class Knight extends ChessPiece {
     }
 
     @Override
-    public Position[] drawPath(Position targetPos) {
-        
-        int numPoints = 0;
-        Position[] posList = new Position[numPoints];
-        
-        return posList;
+    public Position[] generatePseudoLegalMoves() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+    @Override
+    public Type getType() {
+        return super.getType();
+    }
+
+    @Override
+    public boolean isWhite() {
+        return super.isWhite();
+    }
+    
+    
     
 }

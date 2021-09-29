@@ -11,8 +11,8 @@ package Model;
  */
     
     /**
-     * Piece types are stored as constants
+     * Piece types are stored as enum
      */
     public enum Type {
-        KING, QUEEN, BISHOP, KNIGHT, ROOK, PAWN
+        KING, QUEEN, BISHOP, KNIGHT, ROOK, PAWN, EMPTY;
     }

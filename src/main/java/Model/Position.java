@@ -14,13 +14,7 @@ public class Position {
     private int col; // x axis
     private int row; // y axis
     private int index; // position in a 1-D array
-    
-    // Chess algebraic notation is expressed as "[file][rank]", from the
-    // perspective of white. Left-most file (column) is "a", and the bottom 
-    // rank (row) is "1". 
-    // Example: "d5", where "d" is the 4th file/column (index = 3), and "5" is the 5th
-    // rank/row (index = 4).
-    private String algebraic;
+    private String algebraic; // notation such as "d4"
     
     /**
      * Converts Cartesian coordinates to algebraic notation
@@ -79,6 +73,18 @@ public class Position {
         this.row = coords.charAt(1) - '0';
         this.index = row*8 + col;
     }
+    
+    /**
+     * Creates a Position objected based on the index in a 1-D array
+     * @param index 
+     */
+    public Position(int index) {
+        this.index = index;
+        this.row = index/8;
+        this.col = index - row*8;
+        this.algebraic = this.cartesianToAlgebraic(col, row);
+        
+    }
 
     public void setRow(int row) {
         this.row = row;
@@ -92,24 +98,43 @@ public class Position {
         this.algebraic = algebraic;
     }
     
-    
+    /**
+     * Returns a nicely formatted string for the position
+     * @return a string containing algebraic notation, column, row, and index
+     */
     @Override
     public String toString() {
         return String.format("Algebraic: %s, Cartesian: (%d, %d), Index: %d", algebraic, col, row, index);
     }
-
+    
+    /**
+     * Get the row of this piece on the chess board
+     * @return the row
+     */
     public int getRow() {
         return row;
     }
-
+    
+    /**
+     * Get the column of this piece on the chess board
+     * @return the column
+     */
     public int getCol() {
         return col;
     }
-
+    
+    /**
+     * Get the algebraic notation for the position of this piece
+     * @return the algebraic notation
+     */
     public String getAlgebraic() {
         return algebraic;
     }
-
+    
+    /**
+     * Get the index if the piece was to be mapped in 1-D array
+     * @return the index
+     */
     public int getIndex() {
         return index;
     }
