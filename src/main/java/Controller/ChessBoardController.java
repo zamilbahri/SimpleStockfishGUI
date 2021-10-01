@@ -19,7 +19,8 @@ public class ChessBoardController {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            ChessBoard cb = new ChessBoard("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2");
+            //ChessBoard cb = new ChessBoard("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2");
+            ChessBoard cb = new ChessBoard("r4rk1/p4p2/5Rpb/Qp2p2p/3pP2P/6PB/Pq6/5R1K w - - 0 25");
             char pieceMap[] = cb.pieceMap;
             
             ChessBoardGUI gui = new ChessBoardGUI(pieceMap);

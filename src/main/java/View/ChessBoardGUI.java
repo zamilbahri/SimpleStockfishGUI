@@ -24,7 +24,7 @@ import Model.Position;
  * @author zamil
  */
 public class ChessBoardGUI extends JFrame {
-    
+
     char[] pieceMap;
     final Image[] imgs;
     final int DIM = 512; // Dmensiton of the JFrame Window
@@ -49,7 +49,8 @@ public class ChessBoardGUI extends JFrame {
         System.out.println(String.format("%s, %s, %s, %s", frame.getInsets().bottom, frame.getInsets().left, frame.getInsets().top, frame.getInsets().right));
         //frame.setUndecorated(true);
         
-        JPanel pn = new JPanel(){
+        JPanel pn;
+        pn = new JPanel(){
             @Override
             public void paint (Graphics g){
                 boolean white = true;
@@ -68,24 +69,18 @@ public class ChessBoardGUI extends JFrame {
                 for (char i = 0; i < 64; ++i) {
                     char p = pieceMap[i];
                     int ind = -1;
-                    if (Character.toUpperCase(p) == 'K'){
-                        ind = 0;
+                    
+                    switch(p) {
+                        case 'K', 'k' -> ind = 0;
+                        case 'Q', 'q' -> ind = 1;           
+                        case 'B', 'b' -> ind = 2;
+                        case 'N', 'n' -> ind = 3;
+                        case 'R', 'r' -> ind = 4;
+                        case 'P', 'p' -> ind = 5;
+                        default -> {
+                        }
                     }
-                    if(Character.toUpperCase(p) == 'Q'){
-                        ind = 1;
-                    }
-                    if(Character.toUpperCase(p) == ('B')){
-                        ind = 2;
-                    }
-                    if(Character.toUpperCase(p) == 'N'){
-                        ind = 3;
-                    }
-                    if(Character.toUpperCase(p) == 'R'){
-                        ind = 4;
-                    }
-                    if(Character.toUpperCase(p) == 'P'){
-                        ind = 5;
-                    }
+                    
                     if(Character.isLowerCase(p)){
                         ind += 6;
                     }
@@ -115,6 +110,7 @@ public class ChessBoardGUI extends JFrame {
         Worker.execute();
     }
     
+    // texture atlas
     private Image[] getPieceSprites() {
         BufferedImage all;
         try {
