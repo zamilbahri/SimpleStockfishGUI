@@ -102,32 +102,14 @@ public class ChessBoard {
             
             else if (Character.isLetter(c)) {
                 switch (c) {
-                    case 'r':
-                    case 'R':
-                        pieces.add(new Rook(Character.isUpperCase(c), new Position(index)));
-                        break;
-                    case 'b':
-                    case 'B':
-                        pieces.add(new Bishop(Character.isUpperCase(c), new Position(index)));
-                        break;
-                    case 'n':
-                    case 'N':
-                        pieces.add(new Knight(Character.isUpperCase(c), new Position(index)));
-                        break;
-                    case 'q':
-                    case 'Q':
-                        pieces.add(new Queen(Character.isUpperCase(c), new Position(index)));
-                        break;
-                    case 'k':
-                    case 'K':
-                        pieces.add(new King(Character.isUpperCase(c), new Position(index)));
-                        break;
-                    case 'p':
-                    case 'P':
-                        pieces.add(new Pawn(Character.isUpperCase(c), new Position(index)));
-                        break;
-                    default:
-                        break;
+                    case 'r', 'R' -> pieces.add(new Rook(Character.isUpperCase(c), new Position(index)));
+                    case 'b', 'B' -> pieces.add(new Bishop(Character.isUpperCase(c), new Position(index)));
+                    case 'n', 'N' -> pieces.add(new Knight(Character.isUpperCase(c), new Position(index)));
+                    case 'q', 'Q' -> pieces.add(new Queen(Character.isUpperCase(c), new Position(index)));
+                    case 'k', 'K' -> pieces.add(new King(Character.isUpperCase(c), new Position(index)));
+                    case 'p', 'P' -> pieces.add(new Pawn(Character.isUpperCase(c), new Position(index)));
+                    default -> {
+                    }
                 }
 
                 pieceMap[index] = c;
