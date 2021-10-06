@@ -25,6 +25,8 @@ public class ChessBoardController {
     ChessBoardGUI gui; // view
     ChessBoard cb; // model
     
+    boolean BoardEditMode = true; // If true, pieces can be dragged and dropped anywhere
+    
     public ChessBoardController(ChessBoardGUI gui, ChessBoard cb) {
         this.gui = gui; // GUI: The View
         this.cb = cb; // ChessBoard: The Model
@@ -77,13 +79,24 @@ public class ChessBoardController {
         @Override
         public void actionPerformed(ActionEvent e) {
             
-            Move move = gui.getMove();
+            // 1. convert drag and drop coordinates to chessboard coordinates
+            
+            // 2. If BoardEditMode == true, move the piece in the GUI and update
+            //      the FEN.
+            
+            // 3. If oardEditMode == false, ask the ChessBoard class
+            //      if the move is legal in another SwingWorker thread.
+            
+            // 4. If the move is not legal, then put the piece back to where it was.
+            
+            // 5. If the move is legal, then move the piece in the GUI and update
+            //      the FEN.
 
         }
         
     }
     
-    // Main function needs to be moved to a top level class
+    // Main function needs to be moved to a top level class. Havent created it yet
     public static void main(String args[]) {
 
         /* Create and display the form */
@@ -93,7 +106,8 @@ public class ChessBoardController {
             ChessBoard cb = new ChessBoard();
             char pieceMap[] = cb.pieceMap;
           
-            //ChessBoardGUI gui = new ChessBoardGUI(pieceMap);
+            ChessBoardGUI gui = new ChessBoardGUI(pieceMap);
+            gui.setVisible(true);
             
             
         });

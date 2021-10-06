@@ -31,7 +31,6 @@ import javax.swing.JTextField;
 public class ChessBoardGUI extends JFrame {
 
     char[] pieceMap;
-    final Image[] imgs;
     final int DIM = 512; // Dmensiton of the JFrame Window
     JTextField fenInput;
     
@@ -41,17 +40,16 @@ public class ChessBoardGUI extends JFrame {
      */
     public ChessBoardGUI(char[] pieceMap) {
         this.pieceMap = pieceMap;
-        imgs = getPieceSprites();
+        final Image[] imgs = getPieceSprites();
         if (imgs == null) {}
  
         //initComponents();
         this.setSize(DIM+16, DIM+39);
-        JPanel pn = createChessBoard();
+        JPanel pn = createChessBoard(imgs);
         fenInput = new JTextField();
         
         this.add(pn);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(true);
     }
         
     
@@ -59,7 +57,7 @@ public class ChessBoardGUI extends JFrame {
      * Creates the Chessboard
      * @return JPanel object that contains the chess board
      */
-    private JPanel createChessBoard() {
+    private JPanel createChessBoard(Image[] imgs) {
         
         return new JPanel(){
             @Override
@@ -127,6 +125,10 @@ public class ChessBoardGUI extends JFrame {
         return new Move("e2", "e4");
     }
     
+    /**
+     * 
+     * @return 
+     */
     private Image[] getPieceSprites() {
         BufferedImage all;
         try {
