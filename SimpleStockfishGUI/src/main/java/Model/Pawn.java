@@ -7,11 +7,11 @@ package Model;
 
 /*
  * trye commit only changed files?
- * commit message:
+ * commit message:  
  * chess peice- added constants boardmax/board min - dimension of board
 
 pawn - updated. in progress.
-bishop - updating...
+bishop - updating... 
 chessboard - added psduo code
 
 note:public Position[] generatePseudoLegalMoves() -will prob be same in each indiv piece class?
@@ -48,7 +48,7 @@ public class Pawn extends ChessPiece {
 		targetX = targetPos.getRow();
 		targetY = targetPos.getCol();
 
-		// define “forward”//up for white. or down for black //calcuatel end positon
+		// define â€œforwardâ€�//up for white. or down for black //calcuatel end positon
 		if (this.isWhite()) {
 
 			forward[0] = currentX;
