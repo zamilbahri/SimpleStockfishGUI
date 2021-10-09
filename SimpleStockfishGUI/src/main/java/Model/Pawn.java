@@ -6,7 +6,7 @@
 package Model;
 
 /*
- * trye commit only changed files?
+ * trye commit only changed files? 
  * commit message:  
  * chess peice- added constants boardmax/board min - dimension of board
 
