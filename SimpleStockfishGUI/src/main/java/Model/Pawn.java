@@ -15,14 +15,22 @@ bishop - updating...
 chessboard - added psduo code
 
 note:public Position[] generatePseudoLegalMoves() -will prob be same in each indiv piece class?
+-------------------------
+commit 2: 
+
+bishop- more
+queen - started
+pawn- small change
+chessboard- small change to psduo code
 
  */
+//next step - double check all directions as intended
 /**
  *
  * @author zamil, Phoebe
  */
 public class Pawn extends ChessPiece {
-	private boolean isFirstMove, isAttacking, canChange;// is atack /can attack
+	private boolean isFirstMove, isAttacking, canChange, canEnPassant;// is atack /can attack
 
 	public Pawn(boolean isWhite, Position pos) {
 		super(isWhite, pos);
@@ -30,6 +38,7 @@ public class Pawn extends ChessPiece {
 		isFirstMove = true;
 		isAttacking = false;
 		canChange = false;
+		canEnPassant = false;
 	}
 
 	@Override
@@ -43,7 +52,7 @@ public class Pawn extends ChessPiece {
 																		// pov
 		// [x,y]
 		int currentX = 0, currentY = 0, targetX = 0, targetY = 0;
-		currentX = this.pos.getRow();
+		currentX = this.pos.getRow(); // or swithc around
 		currentY = this.pos.getCol();
 		targetX = targetPos.getRow();
 		targetY = targetPos.getCol();
@@ -87,7 +96,8 @@ public class Pawn extends ChessPiece {
 		}
 
 		// =========================================
-		// check invalid-- in chess board!!
+		// check invalid-- in chess board??
+		// dont need add current? or change in bisoph and queen
 
 		if (forward[0] + currentX > BOARD_MAX || diag1[0] + currentX > BOARD_MAX || diag2[0] + currentX > BOARD_MAX
 				|| forward[1] + currentY > BOARD_MAX || diag1[1] + currentY > BOARD_MAX
@@ -118,14 +128,18 @@ public class Pawn extends ChessPiece {
 			isValid = true;
 		}
 
-		// Check impasse?
-		// ...
+		// Check enpassant //do enpassent in board
+		// can only do when at row 5. assume other peice moved in valid area
+		if (currentY == 5) {
+			isValid = true;
+			setCanEnPassant(true);
+		}
 
 		// If at end of board( y position = 8 )
 		// Turn this piece into queen ( knight or rook etc)- can choose //do the change
 		// in chess board
 
-		if (isValid == true && forward[1] + currentY == BOARD_MAX) {
+		if (isValid == true && forward[1] + currentY == BOARD_MAX) { // should be just forward? not currenty?
 			setCanChange(true);
 		}
 
@@ -165,12 +179,15 @@ public class Pawn extends ChessPiece {
 		return super.isWhite();
 	}
 
-	public void changePawn() {
-		if (canChange == true)
-			// public ArrayList<ChessPiece> pieces = new ArrayList<>();
-			;
-
-	}
+	/*
+	 * //do this in chess board
+	 * 
+	 * 
+	 * public void changePawn() { if (canChange == true) // public
+	 * ArrayList<ChessPiece> pieces = new ArrayList<>(); ;
+	 * 
+	 * }
+	 */
 
 	public void setIsFirstMove(boolean set) { // after first move. its false //or can check start postion is not current
 												// postion
@@ -196,5 +213,13 @@ public class Pawn extends ChessPiece {
 
 	public boolean getCanChange(boolean set) {
 		return canChange;
+	}
+
+	public void setCanEnPassant(boolean set) {
+		canEnPassant = set;
+	}
+
+	public boolean getCanEnPassant(boolean set) {
+		return canEnPassant;
 	}
 }
