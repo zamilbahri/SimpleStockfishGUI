@@ -1,15 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Model;
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates and open the template
+ * in the editor.
+ */
 /**
  *
  * @author zamil, Phoebe
  */
-public class Bishop extends ChessPiece {
+class Bishop extends ChessPiece {
 	private boolean isAttacking;
 
 	public Bishop(boolean isWhite, Position pos) {
@@ -18,71 +18,110 @@ public class Bishop extends ChessPiece {
 		isAttacking = false;
 	}
 
-	@Override
-	public boolean isValidPath(Position targetPos) { // ignoreing other peices on boards
-		// throw new UnsupportedOperationException("Not supported yet.");
-
-		boolean isValid = false;
-		setIsAttacking(false);
-		int[] diag1 = { 0, 0 }, diag2 = { 0, 0 }, diag3 = { 0, 0 }, diag4 = { 0, 0 };// x,y
-
-		int currentX = 0, currentY = 0, targetX = 0, targetY = 0;
-		currentX = this.pos.getRow();
-		currentY = this.pos.getCol();
-		targetX = targetPos.getRow();
-		targetY = targetPos.getCol();
-
-		// can only move diagonaly . 4 ways
-		diag1[0] = currentX - targetX + 1;
-		diag1[1] = currentY - targetY;
-
-		diag2[0] = currentX - targetX - 1;
-		diag2[1] = currentY - targetY;
-
-		diag3[0] = targetX - currentX + 1;
-		diag3[1] = targetY - currentY;
-
-		diag4[0] = targetX - currentX - 1;
-		diag4[1] = targetY - currentY;
-
-		/*
-		 * if (BOARD_MIN < diag1[0] && diag1[0] < BOARD_MAX && BOARD_MIN < diag1[1] &&
-		 * diag1[1] < BOARD_MAX && BOARD_MIN < diag2[0] && diag2[0] < BOARD_MAX &&
-		 * BOARD_MIN < diag2[1] && diag2[1] < BOARD_MAX && BOARD_MIN < diag3[0] &&
-		 * diag3[0] < BOARD_MAX && BOARD_MIN < diag3[1] && diag3[1] < BOARD_MAX &&
-		 * BOARD_MIN < diag4[0] && diag4[0] < BOARD_MAX && BOARD_MIN < diag4[1] &&
-		 * diag4[1] < BOARD_MAX) { // of // each // diagonal
-		 * 
-		 * isValid = true;
-		 * 
-		 * }
-		 */
-		if (checkValid(diag1) && checkValid(diag2) && checkValid(diag3) && checkValid(diag4)) {
-			isValid = true;
-		}
-		return isValid;
+	public boolean isValidPath(Position targetPos) { // works:up left.//not work: up right
+		return true;
 	}
 
 	@Override
-	public Position[] generatePseudoLegalMoves() {
-		// throw new UnsupportedOperationException("Not supported yet.");
+	public Position[] generatePseudoLegalMoves() { // wihtout using isvalid //asumes peicies not in way
 
-		Position[] positions = {};
-		int counter = 0;
+		int counter = 0;// current size
+		Position positions[] = new Position[100];
+		Position targetPos = new Position(0, 0);
 
-		for (int i = 0; i < BOARD_MAX; i++) {
-			for (int j = 0; j < BOARD_MAX; j++) {
+		int currentCol = 0, currentRow = 0, targetCol = 0, targetRow = 0;
+		currentCol = this.pos.getCol();
+		currentRow = this.pos.getRow();
+		// targetCol = targetPos.getCol();
+		// targetRow = targetPos.getRow();
 
-				Position checkPosition = new Position(i, j);
-				if (isValidPath(checkPosition)) {
+		// can only move diagonaly . 4 ways
+		// for 7 possible squares...// check if reach end of board and if target
+		// alreadly in list
+		for (int i = 0; i <= BOARD_MAX; i++) {// up right //cols grow, rows grow
+			targetCol = currentCol + i;
+			targetRow = currentRow + i;
 
-					positions[counter] = checkPosition;
+			if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
+				targetPos = new Position(targetCol, targetRow);
+
+				if (!isDuplicate(positions, counter, targetPos)) {
+					positions[counter] = targetPos;// positions.append(targetCol,targetRow);
 					counter++;
 				}
 			}
+			if (targetCol == BOARD_MAX || targetRow == BOARD_MAX)
+				break;
 		}
 
-		return positions;
+		for (int i = 0; i <= BOARD_MAX; i++) { // down left //cols shrink, rows shrink
+			targetCol = currentCol - i;
+			targetRow = currentRow - i;
+
+			if (targetCol >= BOARD_MIN && targetRow >= BOARD_MIN) {
+				targetPos = new Position(targetCol, targetRow);
+
+				if (!isDuplicate(positions, counter, targetPos)) {
+					positions[counter] = targetPos;
+					counter++;
+				}
+			}
+			if (targetCol == BOARD_MIN || targetRow == BOARD_MIN)
+				break;
+		}
+
+		for (int i = 0; i <= BOARD_MAX; i++) {// up left //cols shrink, rows grow
+			targetCol = currentCol - i;
+			targetRow = currentRow + i;
+
+			if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+				targetPos = new Position(targetCol, targetRow);
+
+				if (!isDuplicate(positions, counter, targetPos)) {
+					positions[counter] = targetPos;
+					counter++;
+				}
+			}
+			if (targetCol == BOARD_MIN || targetRow == BOARD_MAX)
+				break;
+		}
+
+		for (int i = 0; i <= BOARD_MAX; i++) {// down right //cols grow, rows shrink
+			targetCol = currentCol + i;
+			targetRow = currentRow - i;
+
+			if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+				targetPos = new Position(targetCol, targetRow);
+
+				if (!isDuplicate(positions, counter, targetPos)) {
+					positions[counter] = targetPos;
+					counter++;
+				}
+			}
+			if (targetCol == BOARD_MAX || targetRow == BOARD_MIN)
+				break;
+		}
+
+		// copy array of correct size
+		Position positionsAns[] = new Position[counter]; // current array size used up
+		for (int i = 0; i < counter; i++) {
+			positionsAns[i] = positions[i];
+		}
+
+		return positionsAns;
+
+	}
+
+	public boolean isDuplicate(Position[] positions, int counter, Position targetPos) { // added
+
+		if (counter == 0) // if (positions.length==0) //length is tot len availble
+			return false;
+
+		for (int i = 0; i < counter; i++) {// for (Position pos: positions) {
+			if (positions[i].equals(targetPos))// if (pos.equals(targetPos))
+				return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -95,8 +134,7 @@ public class Bishop extends ChessPiece {
 		return super.isWhite();
 	}
 
-	public void setIsAttacking(boolean set) { // after first move. its false //or can check start postion is not current
-												// postion
+	public void setIsAttacking(boolean set) { /// can check start postion is not current postion ?
 		isAttacking = set;
 	}
 
@@ -104,8 +142,8 @@ public class Bishop extends ChessPiece {
 		return isAttacking;
 	}
 
-	private boolean checkValid(int[] list) { // helper
-
+	private boolean checkValid(int[] list) { // helper--unused
+		// if crreunt postion[0] + list[0] out of range...
 		if (BOARD_MIN < list[0] && list[0] < BOARD_MAX && BOARD_MIN < list[1] && list[1] < BOARD_MAX) {
 			return true;
 
@@ -113,20 +151,5 @@ public class Bishop extends ChessPiece {
 		return false;
 
 	}
-}
 
-// ===============
-/*
- * if( BOARD_MIN <diag1[0] &&diag1[0]<BOARD_MAX &&BOARD_MIN <diag1[1]
- * &&diag1[1]<BOARD_MAX &&BOARD_MIN <diag2[0] &&diag2[0]<BOARD_MAX &&BOARD_MIN
- * <diag2[1] &&diag2[1]<BOARD_MAX)
- * 
- * { //valid range
- * 
- * 
- * isValid = true; }
- * 
- * if(BOARD_MIN<diag1[0] +BOARD_MAX && diag1[0]-BOARD_MAX<BOARD_MAX &&
- * BOARD_MIN<diag1[0] +BOARD_MAX && diag1[0]-BOARD_MAX<BOARD_MAX) //valid range-
- * opposite direction?? //need do // 2??
- */
+}

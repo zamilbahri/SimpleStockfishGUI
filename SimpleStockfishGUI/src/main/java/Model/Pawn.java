@@ -24,12 +24,26 @@ pawn- small change
 chessboard- small change to psduo code
 
  */
-//next step - double check all directions as intended
+
+/*
+ * commit 3:
+ * changes:
+ * pawn queen bishop- all movements fixed--assuming no peicies in way. not include enpassent- all generatepsudo moves work - wont use isvalid() 
+ *  tester funcs added--all test cases work -(not added to chessboard controller)
+ * 
+ * public boolean equals(Object obj) { // ADDED  in Position
+ * public boolean isDuplicate(Position[] positions, int counter, Position targetPos) { () added to bishop,queen,pawn
+ * 
+
+ */
+
+//next step - double check all directions as intended-it is. practice has test cases working
+
 /**
  *
  * @author zamil, Phoebe
  */
-public class Pawn extends ChessPiece {
+class Pawn extends ChessPiece {
 	private boolean isFirstMove, isAttacking, canChange, canEnPassant;// is atack /can attack
 
 	public Pawn(boolean isWhite, Position pos) {
@@ -42,131 +56,163 @@ public class Pawn extends ChessPiece {
 	}
 
 	@Override
-	public boolean isValidPath(Position targetPos) { // all posbblie moves in paw.n //chess board calls to see illagel
-														// ones after
-		// throw new UnsupportedOperationException("Not supported yet.");
+	public boolean isValidPath(Position targetPos) {
+		return true;
+	}
+	/*
+	 * 
+	 * 
+	 * 
+	 * // Check enpassant //do enpassent in board // can only do when at row 5.
+	 * assume other peice moved in valid area if (currentY == 5) { isValid = true;
+	 * setCanEnPassant(true); }
+	 * 
+	 * // If at end of board( y position = 8 ) // Turn this piece into queen (
+	 * knight or rook etc)- can choose //do the change // in chess board
+	 * 
+	 * }
+	 */
 
-		boolean isValid = false;
-		setIsAttacking(false);
-		int[] forward = { 0, 0 }, diag1 = { 0, 0 }, diag2 = { 0, 0 };// forwrd, forward left, forward right. From pieces
-																		// pov
-		// [x,y]
-		int currentX = 0, currentY = 0, targetX = 0, targetY = 0;
-		currentX = this.pos.getRow(); // or swithc around
-		currentY = this.pos.getCol();
-		targetX = targetPos.getRow();
-		targetY = targetPos.getCol();
+	@Override
+	public Position[] generatePseudoLegalMoves() {
 
-		// define â€œforwardâ€�//up for white. or down for black //calcuatel end positon
-		if (this.isWhite()) {
+		int counter = 0;// current size
+		Position positions[] = new Position[100];
+		Position targetPos = new Position(0, 0);
 
-			forward[0] = currentX;
-			forward[1] = currentY - targetY; // forward= [currentX-targetX,currentY];
+		int currentCol = 0, currentRow = 0, targetCol = 0, targetRow = 0;
+		currentCol = this.pos.getCol();
+		currentRow = this.pos.getRow();
 
-			diag1[0] = currentX - targetX + 1;
-			diag1[1] = currentY - targetY;
+		// define forward//up for white. or down for black //calcuatel end positon
+		// //asume Can move 2 forards
+		if (this.isWhite()) {// WHITE: UP //cols same, rows change
 
-			diag2[0] = currentX - targetX - 1;
-			diag2[1] = currentY - targetY;
+			for (int i = 0; i <= 2; i++) {
+				targetCol = currentCol;
+				targetRow = currentRow + i;
 
-			// forward = [this.pos[y coord]-targetPos[y coord], this.pos[xcoord] ];//dist of
-			// this.pos to targetPos //y corrd is pos[1]??
-			// diag1 = [this.pos[y coord]-targetPos[y coord], this.pos[x coord]-targetPos[x
-			// coord] + 1] ;
-			// diag2 = [this.pos[y coord]-targetPos[y coord], this.pos[x coord]-targetPos[x
-			// coord]-1] ;
-		} else if (!this.isWhite()) {
+				if (targetRow <= BOARD_MAX) {// if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
+					targetPos = new Position(targetCol, targetRow);
 
-			forward[0] = currentX;
-			forward[1] = targetY - currentY;
+					if (!isDuplicate(positions, counter, targetPos)) {
+						positions[counter] = targetPos;
+						counter++;
+					}
+				}
+				// if (targetCol == BOARD_MAX || targetRow == BOARD_MAX) break;
+			}
 
-			diag1[0] = targetX - currentX + 1;
-			diag1[1] = targetY - currentY;
+		} else if (!this.isWhite()) {// BALCK: DOWN
+			for (int i = 0; i <= 2; i++) {
+				targetCol = currentCol;
+				targetRow = currentRow - i;
 
-			diag2[0] = targetX - currentX - 1;
-			diag2[1] = targetY - currentY;
+				if (targetRow >= BOARD_MIN) {// if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
+					targetPos = new Position(targetCol, targetRow);
 
-			// forward = [targetPos[y coord]- this.pos[y coord],this.pos[x coord] ];//dist
-			// of this.pos to targetPos
-			// diag1 = [targetPos[y coord]- this.pos[y coord], targetPos[x coord]-
-			// this.pos[x coord] +1];
-			// diag2 = [targetPos[y coord]- this.pos[y coord], targetPos[x coord]-
-			// this.pos[x coord] -1];
+					if (!isDuplicate(positions, counter, targetPos)) {
+						positions[counter] = targetPos;
+						counter++;
+					}
+				}
+				// if (targetCol == BOARD_MAX || targetRow == BOARD_MAX) break;
+			}
 
-		}
-
-		// =========================================
-		// check invalid-- in chess board??
-		// dont need add current? or change in bisoph and queen
-
-		if (forward[0] + currentX > BOARD_MAX || diag1[0] + currentX > BOARD_MAX || diag2[0] + currentX > BOARD_MAX
-				|| forward[1] + currentY > BOARD_MAX || diag1[1] + currentY > BOARD_MAX
-				|| diag2[1] + currentY > BOARD_MAX || forward[0] + currentX < BOARD_MIN
-				|| diag1[0] + currentX < BOARD_MIN || diag2[0] + currentX < BOARD_MIN
-				|| forward[1] + currentY < BOARD_MIN || diag1[1] + currentY < BOARD_MIN
-				|| diag2[1] + currentY < BOARD_MIN)
-
-		{ // if forard.y coord + current position.ycoord > bord len
-			return false;
-		}
-
-		// ===============================================
-
-		// Can move 1 "forward"
-
-		if (forward[1] == 1) {// (forward == [0,1]){
-			isValid = true;
-		}
-
-		// If this is its first move (first move = true).//Can move 2.
-		if (isFirstMove == true && forward[1] == 2) {
-			isValid = true;
 		}
 
 		// asume diagonal forward is valid. later prove not valid if no peice i sthere
-		if ((diag1[0] == 1 && diag1[1] == 1) || (diag2[0] == 1 && diag2[1] == 1)) {
-			isValid = true;
+
+		// can move diagonaly . 4 ways //depends on color
+		// for 2 possible squares...// check if reach end of board and if target
+		// alreadly in list
+
+		if (this.isWhite()) {
+
+			for (int i = 0; i <= 1; i++) {// up right //cols grow, rows grow
+				targetCol = currentCol + i;
+				targetRow = currentRow + i;
+
+				if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
+					targetPos = new Position(targetCol, targetRow);
+
+					if (!isDuplicate(positions, counter, targetPos)) {
+						positions[counter] = targetPos;// positions.append(targetCol,targetRow);
+						counter++;
+					}
+				}
+				// if (targetCol == BOARD_MAX || targetRow == BOARD_MAX)break;
+			}
+
+			for (int i = 0; i <= 1; i++) {// up left //cols shrink, rows grow
+				targetCol = currentCol - i;
+				targetRow = currentRow + i;
+
+				if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+					targetPos = new Position(targetCol, targetRow);
+
+					if (!isDuplicate(positions, counter, targetPos)) {
+						positions[counter] = targetPos;
+						counter++;
+					}
+				}
+				// if (targetCol == BOARD_MIN || targetRow == BOARD_MAX) break;
+			}
+
+		} else if (!this.isWhite()) {
+
+			for (int i = 0; i <= 1; i++) { // down left //cols shrink, rows shrink
+				targetCol = currentCol - i;
+				targetRow = currentRow - i;
+
+				if (targetCol >= BOARD_MIN && targetRow >= BOARD_MIN) {
+					targetPos = new Position(targetCol, targetRow);
+
+					if (!isDuplicate(positions, counter, targetPos)) {
+						positions[counter] = targetPos;
+						counter++;
+					}
+				}
+				// if (targetCol == BOARD_MIN || targetRow == BOARD_MIN) break;
+			}
+
+			for (int i = 0; i <= 1; i++) {// down right //cols grow, rows shrink
+				targetCol = currentCol + i;
+				targetRow = currentRow - i;
+
+				if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+					targetPos = new Position(targetCol, targetRow);
+
+					if (!isDuplicate(positions, counter, targetPos)) {
+						positions[counter] = targetPos;
+						counter++;
+					}
+				}
+				// if (targetCol == BOARD_MAX || targetRow == BOARD_MIN)break;
+			}
+
 		}
 
-		// Check enpassant //do enpassent in board
-		// can only do when at row 5. assume other peice moved in valid area
-		if (currentY == 5) {
-			isValid = true;
-			setCanEnPassant(true);
+		// copy array of correct size
+		Position positionsAns[] = new Position[counter]; // current array size used up
+		for (int i = 0; i < counter; i++) {
+			positionsAns[i] = positions[i];
 		}
 
-		// If at end of board( y position = 8 )
-		// Turn this piece into queen ( knight or rook etc)- can choose //do the change
-		// in chess board
+		return positionsAns;
 
-		if (isValid == true && forward[1] + currentY == BOARD_MAX) { // should be just forward? not currenty?
-			setCanChange(true);
-		}
-
-		return isValid;
 	}
 
-	@Override
-	public Position[] generatePseudoLegalMoves() { // can move this to chess BOard? since will be same in rest
-		// throw new UnsupportedOperationException("Not supported yet.");
+	public boolean isDuplicate(Position[] positions, int counter, Position targetPos) { // added
 
-		Position[] positions = {};// ArrayList<Position> positions = new ArrayList<Position>();
-		int counter = 0;
+		if (counter == 0)
+			return false;
 
-		for (int i = 0; i < BOARD_MAX; i++) {
-			for (int j = 0; j < BOARD_MAX; j++) {
-
-				Position checkPosition = new Position(i, j);
-				if (isValidPath(checkPosition)) {
-
-					positions[counter] = checkPosition;// positions.add(checkPosition);
-					counter++;
-				}
-			}
+		for (int i = 0; i < counter; i++) {
+			if (positions[i].equals(targetPos))
+				return true;
 		}
-
-		return positions;
-
+		return false;
 	}
 
 	@Override

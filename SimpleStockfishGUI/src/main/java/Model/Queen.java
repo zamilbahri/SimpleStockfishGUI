@@ -9,7 +9,8 @@ package Model;
  *
  * @author zamil, Phoebe
  */
-public class Queen extends ChessPiece {
+class Queen extends ChessPiece {// Bishop{ //ChessPiece { //a bishop but more movments //pspible to inhiert rook
+								// too and combine them?
 	private boolean isAttacking;
 
 	public Queen(boolean isWhite, Position pos) {
@@ -20,90 +21,134 @@ public class Queen extends ChessPiece {
 
 	@Override
 	public boolean isValidPath(Position targetPos) {
-		// throw new UnsupportedOperationException("Not supported yet.");
-		boolean isValid = false;
-		setIsAttacking(false);
-
-		int[] forward = { 0, 0 }, backward = { 0, 0 };// sideways={ 0, 0 };
-		int[] left = { 0, 0 }, right = { 0, 0 };
-		int[] diag1 = { 0, 0 }, diag2 = { 0, 0 }, diag3 = { 0, 0 }, diag4 = { 0, 0 };// x,y
-
-		int currentX = 0, currentY = 0, targetX = 0, targetY = 0;
-		currentX = this.pos.getRow();
-		currentY = this.pos.getCol();
-		targetX = targetPos.getRow();
-		targetY = targetPos.getCol();
-
-		forward[0] = currentX;// up
-		forward[1] = currentY - targetY;
-		backward[0] = currentX; // down
-		backward[1] = targetY - currentY;
-
-		left[0] = currentX - targetX;
-		left[1] = currentY;
-		right[0] = targetX - currentX;
-		right[1] = currentY;
-
-		diag1[0] = currentX - targetX + 1;
-		diag1[1] = currentY - targetY;
-		diag2[0] = currentX - targetX - 1;
-		diag2[1] = currentY - targetY;
-
-		diag3[0] = targetX - currentX + 1;
-		diag3[1] = targetY - currentY;
-		diag4[0] = targetX - currentX - 1;
-		diag4[1] = targetY - currentY;
-
-		// can move back forth// sideways// can move diagonaly . 4 ways
-		if (checkValid(forward) && checkValid(backward) && checkValid(left) && checkValid(right) && checkValid(diag1)
-				&& checkValid(diag2) && checkValid(diag3) && checkValid(diag4)) {
-			isValid = true;
-		}
-
-		/*
-		 * if(BOARD_MIN< forward[0] &&forward[0] < BOARD_MAX && BOARD_MIN< forward[1] &&
-		 * forward[1] < BOARD_MAX &&
-		 * 
-		 * BOARD_MIN< backward[0] &&backward[0] < BOARD_MAX && BOARD_MIN< backward[1] &&
-		 * backward[1] < BOARD_MAX &&
-		 * 
-		 * BOARD_MIN< left[0] && left[0] < BOARD_MAX && BOARD_MIN< left[1] && left[1] <
-		 * BOARD_MAX && BOARD_MIN< right[0] && right[0] < BOARD_MAX && BOARD_MIN<
-		 * right[1] && right[1] < BOARD_MAX &&
-		 * 
-		 * BOARD_MIN <diag1[0] &&diag1[0]<BOARD_MAX &&BOARD_MIN <diag1[1]
-		 * &&diag1[1]<BOARD_MAX &&BOARD_MIN <diag2[0] &&diag2[0]<BOARD_MAX &&BOARD_MIN
-		 * <diag2[1] &&diag2[1]<BOARD_MAX &&BOARD_MIN <diag3[0] &&diag3[0]<BOARD_MAX
-		 * &&BOARD_MIN <diag3[1] &&diag3[1]<BOARD_MAX &&BOARD_MIN <diag4[0]
-		 * &&diag4[0]<BOARD_MAX &&BOARD_MIN <diag4[1] &&diag4[1]<BOARD_MAX
-		 * 
-		 * ) { isValid = true; }
-		 */
-
-		return isValid;
+		return true;
 	}
 
 	@Override
 	public Position[] generatePseudoLegalMoves() {
-		// throw new UnsupportedOperationException("Not supported yet.");
+		int counter = 0;// current size
 
-		Position[] positions = {};
-		int counter = 0;
+		Position positions[] = new Position[100];
+		Position targetPos = new Position(0, 0);
 
-		for (int i = 0; i < BOARD_MAX; i++) {
-			for (int j = 0; j < BOARD_MAX; j++) {
+		int currentCol = 0, currentRow = 0, targetCol = 0, targetRow = 0;
+		currentCol = this.pos.getCol();
+		currentRow = this.pos.getRow();
 
-				Position checkPosition = new Position(i, j);
-				if (isValidPath(checkPosition)) {
+		// daigs //or find if 2 daignolds? like an x
 
-					positions[counter] = checkPosition;
+		for (int i = 0; i <= BOARD_MAX; i++) {// up right //cols grow, rows grow
+			targetCol = currentCol + i;
+			targetRow = currentRow + i;
+
+			if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
+				targetPos = new Position(targetCol, targetRow);
+
+				if (!isDuplicate(positions, counter, targetPos)) {
+					positions[counter] = targetPos;// positions.append(targetCol,targetRow);
 					counter++;
 				}
 			}
+			if (targetCol == BOARD_MAX || targetRow == BOARD_MAX)
+				break;
 		}
 
-		return positions;
+		for (int i = 0; i <= BOARD_MAX; i++) { // down left //cols shrink, rows shrink
+			targetCol = currentCol - i;
+			targetRow = currentRow - i;
 
+			if (targetCol >= BOARD_MIN && targetRow >= BOARD_MIN) {
+				targetPos = new Position(targetCol, targetRow);
+
+				if (!isDuplicate(positions, counter, targetPos)) {
+					positions[counter] = targetPos;
+					counter++;
+				}
+			}
+			if (targetCol == BOARD_MIN || targetRow == BOARD_MIN)
+				break;
+		}
+
+		for (int i = 0; i <= BOARD_MAX; i++) {// up left //cols shrink, rows grow
+			targetCol = currentCol - i;
+			targetRow = currentRow + i;
+
+			if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+				targetPos = new Position(targetCol, targetRow);
+
+				if (!isDuplicate(positions, counter, targetPos)) {
+					positions[counter] = targetPos;
+					counter++;
+				}
+			}
+			if (targetCol == BOARD_MIN || targetRow == BOARD_MAX)
+				break;
+		}
+
+		for (int i = 0; i <= BOARD_MAX; i++) {// down right //cols grow, rows shrink
+			targetCol = currentCol + i;
+			targetRow = currentRow - i;
+
+			if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+				targetPos = new Position(targetCol, targetRow);
+
+				if (!isDuplicate(positions, counter, targetPos)) {
+					positions[counter] = targetPos;
+					counter++;
+				}
+			}
+			if (targetCol == BOARD_MAX || targetRow == BOARD_MIN)
+				break;
+		}
+
+		// horiz/vertical moves //missing some at ends?
+		for (int i = 0; i <= BOARD_MAX; i++) {// right/left //cols change, rows same //max+1
+			targetCol = i;
+			targetRow = currentRow;
+
+			targetPos = new Position(targetCol, targetRow);
+
+			if (!isDuplicate(positions, counter, targetPos)) {
+				positions[counter] = targetPos;
+				counter++;
+			}
+
+		}
+
+		for (int i = 0; i <= BOARD_MAX; i++) {// up/down //cols same, rows change
+			targetCol = currentCol;
+			targetRow = i;
+
+			targetPos = new Position(targetCol, targetRow);
+
+			if (!isDuplicate(positions, counter, targetPos)) {
+				positions[counter] = targetPos;
+				counter++;
+			}
+
+		}
+
+		// copy array of correct size
+		Position positionsAns[] = new Position[counter]; // current array size used up
+		for (int i = 0; i < counter; i++) {
+			positionsAns[i] = positions[i];
+			// System.out.println(positionsAns[i] ); //debug
+		}
+
+		return positionsAns;
+
+	}
+
+	public boolean isDuplicate(Position[] positions, int counter, Position targetPos) { // added
+
+		if (counter == 0) // if (positions.length==0) //length is tot len availble
+			return false;
+
+		for (int i = 0; i < counter; i++) {// for (Position pos: positions) {
+			if (positions[i].equals(targetPos))// if (pos.equals(targetPos))
+				return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -116,8 +161,7 @@ public class Queen extends ChessPiece {
 		return super.isWhite();
 	}
 
-	public void setIsAttacking(boolean set) { // after first move. its false //or can check start postion is not current
-												// postion
+	public void setIsAttacking(boolean set) {
 		isAttacking = set;
 	}
 
@@ -125,7 +169,7 @@ public class Queen extends ChessPiece {
 		return isAttacking;
 	}
 
-	private boolean checkValid(int[] list) { // helper
+	private boolean checkValid(int[] list) { // helper-unused
 
 		if (BOARD_MIN < list[0] && list[0] < BOARD_MAX && BOARD_MIN < list[1] && list[1] < BOARD_MAX) {
 			return true;
@@ -135,23 +179,3 @@ public class Queen extends ChessPiece {
 
 	}
 }
-
-// =============del
-// could imporve: wtih check horiz vs check vertical?- no
-// if forwrd or - forward in range? //abs forward? instead of back?? - no. cuz
-// maay not be symtric
-
-/*
- * if(BOARD_MIN< Math.abs(forward[0]) && Math.abs(forward[0]) < BOARD_MAX &&
- * BOARD_MIN< Math.abs(forward[1]) && Math.abs(forward[1]) < BOARD_MAX &&
- * BOARD_MIN< Math.abs(left[0]) && Math.abs(left[0]) < BOARD_MAX && BOARD_MIN<
- * Math.abs(left[1]) && Math.abs(left[1]) < BOARD_MAX &&
- * 
- * BOARD_MIN <diag1[0] &&diag1[0]<BOARD_MAX &&BOARD_MIN <diag1[1]
- * &&diag1[1]<BOARD_MAX &&BOARD_MIN <diag2[0] &&diag2[0]<BOARD_MAX &&BOARD_MIN
- * <diag2[1] &&diag2[1]<BOARD_MAX &&BOARD_MIN <diag3[0] &&diag3[0]<BOARD_MAX
- * &&BOARD_MIN <diag3[1] &&diag3[1]<BOARD_MAX &&BOARD_MIN <diag4[0]
- * &&diag4[0]<BOARD_MAX &&BOARD_MIN <diag4[1] &&diag4[1]<BOARD_MAX
- * 
- * ) {
- */
