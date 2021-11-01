@@ -101,7 +101,7 @@ class Queen extends ChessPiece {// Bishop{ //ChessPiece { //a bishop but more mo
 				break;
 		}
 
-		// horiz/vertical moves //missing some at ends?
+		// horiz/vertical moves
 		for (int i = 0; i <= BOARD_MAX; i++) {// right/left //cols change, rows same //max+1
 			targetCol = i;
 			targetRow = currentRow;
