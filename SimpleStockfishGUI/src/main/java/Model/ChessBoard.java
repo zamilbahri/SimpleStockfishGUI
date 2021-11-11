@@ -19,7 +19,7 @@ public class ChessBoard {
 	private final static String DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	private String fen; // = r3k2r/pp1b1ppp/1qnbpn2/2ppN3/3P1B2/1QPBP3/PP1N1PPP/R4RK1 w kq - 0 1
 	public char[] pieceMap = new char[64];
-	public ArrayList<ChessPiece> pieces = new ArrayList<>();
+	public ArrayList<ChessPiece> pieces = new ArrayList<>(); // this is all the pices current positions -
 
 	boolean turn; // indicates whose turn it is - white = 0, black = 1
 
@@ -109,23 +109,30 @@ public class ChessBoard {
 				case 'r':
 				case 'R':
 					pieces.add(new Rook(Character.isUpperCase(c), new Position(index)));
+					break;
 				case 'b':
 				case 'B':
 					pieces.add(new Bishop(Character.isUpperCase(c), new Position(index)));
+					break;
 				case 'n':
 				case 'N':
 					pieces.add(new Knight(Character.isUpperCase(c), new Position(index)));
+					break;
 				case 'q':
 				case 'Q':
 					pieces.add(new Queen(Character.isUpperCase(c), new Position(index)));
+					break;
 				case 'k':
 				case 'K':
 					pieces.add(new King(Character.isUpperCase(c), new Position(index)));
+					break;
 				case 'p':
 				case 'P':
 					pieces.add(new Pawn(Character.isUpperCase(c), new Position(index)));
+					break;
 				default:
 
+					break;
 				}
 				pieceMap[index] = c;
 				col++;
@@ -164,79 +171,512 @@ public class ChessBoard {
 
 	}
 
+	public boolean isCheck() { // dummy funcs
+		return false;
+	}
+
+	public boolean isCheckMate() {
+		return false;
+	}
+
 	/**
 	 * 
 	 * @return A list of strings(?) containing the moves
 	 */
 	public Move[] generateLegalMoves() {
-		// TODO: implement
 
-		Position exampleStartSquare1 = new Position("a2");
-		Position exampleTargetSquare1 = new Position("b3");
-		Move move1 = new Move(exampleStartSquare1, exampleTargetSquare1);
-
-		Position exampleStartSquare2 = new Position("d2");
-		Position exampleTargetSquare2 = new Position("d4");
-		Move move2 = new Move(exampleStartSquare2, exampleTargetSquare2);
+		// need use peixes array list for all peices
 
 		/*
-		 * if(this.type ==PAWN) {
-		 * 
-		 * // Can attack daig if peice diagonal forward of it
-		 * 
-		 * 
-		 * if( (diag1[0] == anotherPeice.getRow() && diag1[1] == anotherPeice.getCol())
-		 * || (diag1[0] == anotherPeice.getRow() && diag1[1] == anotherPeice.getCol()){
-		 * this.piece.setIsAttacking(true);//atack();//movethisPiece()
-		 * 
-		 * //remove other peice
-		 * 
-		 * }
-		 * 
-		 * //x =another x and y = another y isValid = true;
-		 * 
-		 * if (this.type ==PAWN && this.getCanChange() == true) { doEnPassent(); }
-		 * 
-		 * 
-		 * if (this.type ==PAWN && this.getCanChange() == true) { this.type =QUEEN;
-		 * this.piece = new ChessPiece( this.isWhite(), this.pos) ;
-		 * 
-		 * // Turn this piece into queen ( knight or rook etc)- can choose
-		 * 
-		 * }
-		 * 
-		 * 
-		 * 
-		 * if (isCheck() || isCheckMate()) {
-		 * 
-		 * // If this move/end position make check/checkmate on that team:
-		 * 
-		 * 
-		 * isValid = false;
-		 * 
-		 * }
-		 * 
-		 * }
-		 * 
-		 * 
-		 * 
-		 * 
-		 * if(this.type ==BISHOP) {
-		 * 
-		 * if (this.pos == anotherPiece.pos){ this.piece.setIsAttacking(true); }
-		 * 
-		 * if (isCheck() || isCheckMate()) { isValid = false; } }
-		 * 
-		 * 
-		 * if(this.type ==QUEEN) {
-		 * 
-		 * if (this.pos == anotherPiece.pos){ this.piece.setIsAttacking(true); }
-		 * 
-		 * if (isCheck() || isCheckMate()) { isValid = false; } }
-		 * 
+		 * for (int i = 0; i < pieces.size(); i++) { // debug
+		 * System.out.println(pieces.get(i)); }
 		 */
 
-		return new Move[] { move1, move2 };
+		int BOARD_MAX = 7, BOARD_MIN = 0;
+
+		Move[] moves = new Move[10000];
+		ChessPiece currentPiece;
+		ChessPiece anotherPiece;// blcoking piece
+
+		Position currentStartSquare;
+		Position currentTargetSquare;
+
+		String currentPieceType;
+
+		int counter = 0;// current size-of positions
+		Position positions[] = new Position[100]; // end positions
+		Position targetPos = new Position(-1, -1);
+
+		int currentCol = 0, currentRow = 0, targetCol = 0, targetRow = 0;
+
+		int movesCounter = 0; // for each peice it changes
+
+		for (int num = 0; num < pieces.size(); num++) { // for all peices
+
+			// current peice
+			currentPiece = pieces.get(num);
+			currentStartSquare = currentPiece.getPosition();
+			currentPieceType = currentPiece.getType().toString();
+
+			// =================== //using genrate psudo and legal in 1
+			if (currentPieceType.equals("BISHOP")) {
+
+				counter = 0;
+				positions = new Position[100];
+				targetPos = new Position(-1, -1);
+
+				currentCol = currentStartSquare.getCol();
+				currentRow = currentStartSquare.getRow();
+
+				// can only move diagonaly . 4 ways
+				// for 7 possible squares...// check if reach end of board and if target
+
+				for (int i = 0; i <= BOARD_MAX; i++) {// up right //cols grow, rows grow
+					targetCol = currentCol + i;
+					targetRow = currentRow + i;
+
+					if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
+						targetPos = new Position(targetCol, targetRow);
+
+						if (isBlocking(targetPos, currentPiece)) {// leave direction
+
+							// if target in psudeo legal: ignore it-and any coming after it in that
+							// direction
+							/*
+							 * for (pieces.size() ){//serach to find other using pieces
+							 * 
+							 * if( (currentPiece.isWhite() && !other.isWhite() )|| (!currentPiece.isWhite()
+							 * && other.isWhite()) ) { positions[counter] = targetPos; counter++;
+							 * currentPiece.setAttacking(true); }
+							 */
+
+							break;
+						}
+
+						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+							// add to end positions
+							positions[counter] = targetPos;
+							counter++;
+						}
+					}
+					if (targetCol == BOARD_MAX || targetRow == BOARD_MAX)
+						break;
+				}
+
+				for (int i = 0; i <= BOARD_MAX; i++) { // down left //cols shrink, rows shrink
+					targetCol = currentCol - i;
+					targetRow = currentRow - i;
+
+					if (targetCol >= BOARD_MIN && targetRow >= BOARD_MIN) {
+						targetPos = new Position(targetCol, targetRow);
+
+						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							break;
+						}
+						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+							positions[counter] = targetPos;
+							counter++;
+						}
+					}
+					if (targetCol == BOARD_MIN || targetRow == BOARD_MIN)
+						break;
+				}
+
+				for (int i = 0; i <= BOARD_MAX; i++) {// up left //cols shrink, rows grow
+					targetCol = currentCol - i;
+					targetRow = currentRow + i;
+
+					if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+						targetPos = new Position(targetCol, targetRow);
+						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							break;
+						}
+						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+
+							positions[counter] = targetPos;
+							counter++;
+						}
+					}
+					if (targetCol == BOARD_MIN || targetRow == BOARD_MAX)
+						break;
+				}
+
+				for (int i = 0; i <= BOARD_MAX; i++) {// down right //cols grow, rows shrink
+					targetCol = currentCol + i;
+					targetRow = currentRow - i;
+
+					if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+						targetPos = new Position(targetCol, targetRow);
+						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							break;
+						}
+						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+							positions[counter] = targetPos;
+							counter++;
+						}
+					}
+					if (targetCol == BOARD_MAX || targetRow == BOARD_MIN)
+						break;
+				}
+
+				// copy array of correct size
+				Position positionsAns[] = new Position[counter];
+				for (int i = 0; i < counter; i++) {
+					positionsAns[i] = positions[i];
+				}
+
+				// return positionsAns;
+
+				// for all postions- add to moves
+				// movesCounter = 0;
+				for (int j = 0; j < positionsAns.length; j++) {
+
+					currentTargetSquare = positionsAns[j];
+					moves[movesCounter] = new Move(currentStartSquare, currentTargetSquare);// add a move of start
+																							// positon to end psotion
+					movesCounter++;
+
+				}
+
+			} else if (currentPieceType.equals("QUEEN")) {
+				// System.out.println("quuen");//debug
+
+				counter = 0;// current size
+
+				positions = new Position[100];
+				targetPos = new Position(-1, -1);
+
+				currentCol = currentStartSquare.getCol();
+				currentRow = currentStartSquare.getRow();
+
+				// daigs
+
+				for (int i = 0; i <= BOARD_MAX; i++) {// up right //cols grow, rows grow
+					targetCol = currentCol + i;
+					targetRow = currentRow + i;
+
+					if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
+						targetPos = new Position(targetCol, targetRow);
+						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							break;
+						}
+						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+							positions[counter] = targetPos;
+							counter++;
+						}
+					}
+					if (targetCol == BOARD_MAX || targetRow == BOARD_MAX)
+						break;
+				}
+
+				for (int i = 0; i <= BOARD_MAX; i++) { // down left //cols shrink, rows shrink
+					targetCol = currentCol - i;
+					targetRow = currentRow - i;
+
+					if (targetCol >= BOARD_MIN && targetRow >= BOARD_MIN) {
+						targetPos = new Position(targetCol, targetRow);
+
+						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							break;
+						}
+						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+							positions[counter] = targetPos;
+							counter++;
+						}
+					}
+					if (targetCol == BOARD_MIN || targetRow == BOARD_MIN)
+						break;
+				}
+
+				for (int i = 0; i <= BOARD_MAX; i++) {// up left //cols shrink, rows grow
+					targetCol = currentCol - i;
+					targetRow = currentRow + i;
+
+					if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+						targetPos = new Position(targetCol, targetRow);
+
+						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							break;
+						}
+						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+							positions[counter] = targetPos;
+							counter++;
+						}
+					}
+					if (targetCol == BOARD_MIN || targetRow == BOARD_MAX)
+						break;
+				}
+
+				for (int i = 0; i <= BOARD_MAX; i++) {// down right //cols grow, rows shrink
+					targetCol = currentCol + i;
+					targetRow = currentRow - i;
+
+					if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+						targetPos = new Position(targetCol, targetRow);
+						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							break;
+						}
+						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+							positions[counter] = targetPos;
+							counter++;
+						}
+					}
+					if (targetCol == BOARD_MAX || targetRow == BOARD_MIN)
+						break;
+				}
+
+				// horiz/vertical moves
+				for (int i = 0; i <= BOARD_MAX; i++) {// right/left //cols change, rows same
+					targetCol = i;
+					targetRow = currentRow;
+
+					targetPos = new Position(targetCol, targetRow);
+					if (isBlocking(targetPos, currentPiece)) {// leave direction
+						break;
+					}
+					if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+						positions[counter] = targetPos;
+						counter++;
+					}
+
+				}
+
+				for (int i = 0; i <= BOARD_MAX; i++) {// up/down //cols same, rows change
+					targetCol = currentCol;
+					targetRow = i;
+
+					targetPos = new Position(targetCol, targetRow);
+					if (isBlocking(targetPos, currentPiece)) {// leave direction
+						break;
+					}
+					if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+						positions[counter] = targetPos;
+						counter++;
+					}
+
+				}
+
+				// copy array of correct size
+				Position positionsAns[] = new Position[counter];
+				for (int i = 0; i < counter; i++) {
+					positionsAns[i] = positions[i];
+
+				}
+
+				// return positionsAns;
+
+				// for all postions- add to moves
+				for (int j = 0; j < positionsAns.length; j++) {
+					currentTargetSquare = positionsAns[j];
+					moves[movesCounter] = new Move(currentStartSquare, currentTargetSquare);
+					movesCounter++;
+
+				}
+
+			} else if (currentPieceType.equals("PAWN")) { // CASE PAWN
+				// System.out.println("checking pawn");
+
+				counter = 0;// current size
+
+				positions = new Position[100];
+				targetPos = new Position(-1, -1);
+
+				currentCol = currentStartSquare.getCol();
+				currentRow = currentStartSquare.getRow();
+
+				int numSpaces = 1; // how far it can go
+
+				Pawn tempPawn = (Pawn) currentPiece; // type cast
+				if (tempPawn.getIsFirstMove() == true) {
+					numSpaces = 2;
+				}
+
+				// define forward//up for white. or down for black //calcuatel end positon
+
+				if (currentPiece.isWhite()) {// WHITE: UP //cols same, rows change
+
+					for (int i = 0; i <= numSpaces; i++) {
+						targetCol = currentCol;
+						targetRow = currentRow + i;
+
+						if (targetRow <= BOARD_MAX) {// if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
+							targetPos = new Position(targetCol, targetRow);
+
+							if (isBlocking(targetPos, currentPiece)) {// leave direction
+								break;
+							}
+							if (!isDuplicate(positions, counter, targetPos)) {
+								positions[counter] = targetPos;
+								counter++;
+							}
+						}
+						// if (targetCol == BOARD_MAX || targetRow == BOARD_MAX) break;
+					}
+
+				} else if (!currentPiece.isWhite()) {// BALCK: DOWN
+					for (int i = 0; i <= numSpaces; i++) {
+						targetCol = currentCol;
+						targetRow = currentRow - i;
+
+						if (targetRow >= BOARD_MIN) {// if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
+							targetPos = new Position(targetCol, targetRow);
+							if (isBlocking(targetPos, currentPiece)) {// leave direction
+								break;
+							}
+							if (!isDuplicate(positions, counter, targetPos)) {
+								positions[counter] = targetPos;
+								counter++;
+							}
+						}
+						// if (targetCol == BOARD_MAX || targetRow == BOARD_MAX) break;
+					}
+
+				}
+
+				// move diag only if isblocking = true and dif color
+
+				// can move diagonaly . 4 ways //depends on color
+				// for 2 possible squares...// check if reach end of board and if target
+				// alreadly in list
+
+				if (currentPiece.isWhite()) {
+
+					for (int i = 0; i <= 1; i++) {// up right //cols grow, rows grow
+						targetCol = currentCol + i;
+						targetRow = currentRow + i;
+
+						if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
+							targetPos = new Position(targetCol, targetRow);
+
+							if (isBlocking(targetPos, currentPiece) && !isDuplicate(positions, counter, targetPos)) {
+								// and color dif
+								positions[counter] = targetPos;// positions.append(targetCol,targetRow);
+								counter++;
+							}
+
+							/*
+							 * if (isBlocking(targetPos, currentPiece)) {// leave direction break; } if
+							 * (!isDuplicate(positions, counter, targetPos)) { positions[counter] =
+							 * targetPos;// positions.append(targetCol,targetRow); counter++; }
+							 */
+						}
+						// if (targetCol == BOARD_MAX || targetRow == BOARD_MAX)break;
+					}
+
+					for (int i = 0; i <= 1; i++) {// up left //cols shrink, rows grow
+						targetCol = currentCol - i;
+						targetRow = currentRow + i;
+
+						if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+							targetPos = new Position(targetCol, targetRow);
+							if (isBlocking(targetPos, currentPiece) && !isDuplicate(positions, counter, targetPos)) {
+								// and color dif
+								positions[counter] = targetPos;// positions.append(targetCol,targetRow);
+								counter++;
+							}
+							/*
+							 * if (isBlocking(targetPos, currentPiece)) {// leave direction break; } if
+							 * (!isDuplicate(positions, counter, targetPos)) { positions[counter] =
+							 * targetPos; counter++; }
+							 */
+						}
+						// if (targetCol == BOARD_MIN || targetRow == BOARD_MAX) break;
+					}
+
+				} else if (!currentPiece.isWhite()) {
+
+					for (int i = 0; i <= 1; i++) { // down left //cols shrink, rows shrink
+						targetCol = currentCol - i;
+						targetRow = currentRow - i;
+
+						if (targetCol >= BOARD_MIN && targetRow >= BOARD_MIN) {
+							targetPos = new Position(targetCol, targetRow);
+							if (isBlocking(targetPos, currentPiece) && !isDuplicate(positions, counter, targetPos)) {
+								// and color dif
+								positions[counter] = targetPos;// positions.append(targetCol,targetRow);
+								counter++;
+							}
+						}
+						// if (targetCol == BOARD_MIN || targetRow == BOARD_MIN) break;
+					}
+
+					for (int i = 0; i <= 1; i++) {// down right //cols grow, rows shrink
+						targetCol = currentCol + i;
+						targetRow = currentRow - i;
+
+						if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+							targetPos = new Position(targetCol, targetRow);
+							if (isBlocking(targetPos, currentPiece) && !isDuplicate(positions, counter, targetPos)) {
+								// and color dif
+								positions[counter] = targetPos;// positions.append(targetCol,targetRow);
+								counter++;
+							}
+						}
+						// if (targetCol == BOARD_MAX || targetRow == BOARD_MIN)break;
+					}
+
+				}
+
+				// copy array of correct size
+				Position positionsAns[] = new Position[counter]; // current array size used up
+				for (int i = 0; i < counter; i++) {
+					positionsAns[i] = positions[i];
+				}
+
+				// return positionsAns;
+
+				// for all postions- add to moves
+				for (int j = 0; j < positionsAns.length; j++) {
+
+					currentTargetSquare = positionsAns[j];
+					moves[movesCounter] = new Move(currentStartSquare, currentTargetSquare);
+					movesCounter++;
+
+				}
+
+			} else {// CASE king kinght rook ===================
+				// System.out.println("checking piece");// debug
+
+				;
+			}
+
+		} // end all pices
+
+		// copy array of correct size
+		Move movesAns[] = new Move[movesCounter];
+		for (int i = 0; i < movesCounter; i++) {
+			movesAns[i] = moves[i];
+		}
+
+		System.out.println("availble moves " + movesCounter); // debug
+		return movesAns;
+
+	}
+
+	public boolean isDuplicate(Position[] positions, int counter, Position targetPos) { // added
+
+		if (counter == 0) // if (positions.length==0)
+			return false;
+
+		for (int i = 0; i < counter; i++) {
+			if (positions[i].equals(targetPos))
+				return true;
+		}
+		return false;
+	}
+
+	public boolean isBlocking(Position targetPos, ChessPiece currentPiece) {
+		if (pieces.size() == 0)
+			return false;
+		// block if: target postion is another peices starting postion
+		// another piece in way but is not same piece
+		for (int i = 0; i < pieces.size(); i++) {
+			if (pieces.get(i).getPosition().equals(targetPos) && !pieces.get(i).equals(currentPiece))
+
+				return true;
+		}
+		return false;
+
 	}
 
 	/**

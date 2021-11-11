@@ -36,8 +36,37 @@ chessboard- small change to psduo code
  * 
 
  */
+/*
+ * commit 4 - chess board generate legal mvoes
+ * move: setend positon s, set start positon--no
+ * modle test: test cases for movments
+ * 
+ * chesspeice, pawn,bishop,queen: added get postition()
+ * ROOK,kings,knight: added get postition()
+ * move- getMoveStr() added, remove() added
+ * 
+ * chess board- break in case statments
+ * 
+ * 
+ * rn: legal moves is just all possible moves
+ * stuck: hwo do legal moves? can add all possible to moves. then remove blocked moves. 
+ * or direaclyt find all legal in bishop? need to pass stuff to func tho? how find other peicies that could block it...
+ */
 
 //next step - double check all directions as intended-it is. practice has test cases working
+
+/*
+ * commit 5
+ * modle test:made: new tester func for chess board
+ * 
+ * chessboard.genrate legal moves--works for initial chess board set up (bishops and queen, pawn(no enpassent,no first move check)) .
+ * chessboard:  isblocking,isdupiclate added
+ * 
+ */
+
+//next step://neeed test pawn diag case //add check enpassent .where set first mvoe false?
+//if(is block ){ if(color is dif)-- postions.add(postion). set attacking = true //can go on that squre (to attack) but cant go past it} //do thisin every direcion check
+// should put in dif func to clean up code in generate legla moves-// can make a func - pass: currentStartSquare . current peice
 
 /**
  *
@@ -225,6 +254,10 @@ class Pawn extends ChessPiece {
 		return super.isWhite();
 	}
 
+	@Override
+	public Position getPosition() {
+		return super.getPosition();
+	}
 	/*
 	 * //do this in chess board
 	 * 
