@@ -99,7 +99,8 @@ public class ModelTest {
 		 * bishops expect: c8c8 f8f8 c1c1 f1f1 f1e2 f1d3 f1c4 f1b5 f1a6 queens expect:
 		 * --ok d8d8 d8c7 d8b6 d8a5 d1d1 d1e2
 		 * 
-		 * pawns expect:-ok(asuming first move) -- where set first mvoe false?
+		 * pawns expect:-ok(asuming first move) -- where set first mvoe false?--works
+		 * now
 		 * 
 		 * a7a7 a7a6 a7a5
 		 * 
@@ -114,6 +115,26 @@ public class ModelTest {
 		 * 
 		 */
 		cb = new ChessBoard("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2");
+		System.out.println(cb);
+		moves = cb.generateLegalMoves();
+
+		for (Move move : moves) { // normal peices arrya
+			System.out.println(move.getMoveStr());
+		}
+
+		// case 3 -check pawn diagnoal attack
+		// expect: c3 to b2, c3 to d2 -- test ok
+		cb = new ChessBoard("rnbqkbnr/pp1ppppp/8/8/4P3/2p2N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2");
+		System.out.println(cb);
+		moves = cb.generateLegalMoves();
+
+		for (Move move : moves) { // normal peices arrya
+			System.out.println(move.getMoveStr());
+		}
+
+		// case 4 -check pawn diagnoal attack of same color
+		// expect: c3 to b2, d3d4--not d3e4-- test ok.
+		cb = new ChessBoard("rnbqkbnr/pp1ppppp/8/8/4P3/2pP1N2/PPP2PPP/RNBQKB1R b KQkq - 1 2");
 		System.out.println(cb);
 		moves = cb.generateLegalMoves();
 

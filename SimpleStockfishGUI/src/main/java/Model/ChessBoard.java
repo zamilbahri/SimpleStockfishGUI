@@ -249,7 +249,19 @@ public class ChessBoard {
 							 * && other.isWhite()) ) { positions[counter] = targetPos; counter++;
 							 * currentPiece.setAttacking(true); }
 							 */
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
 
+							/*
+							 * // can attack anotherPiece = new Pawn(true, new Position(-1, -1)); // default
+							 * peice // class for (int m = 0; m < pieces.size(); m++) {// search for this
+							 * other peice if (pieces.get(m).getPosition().equals(targetPos)) { anotherPiece
+							 * = pieces.get(m); } }
+							 * 
+							 * if (isBlocking(targetPos, currentPiece) && !anotherPiece.isWhite() &&
+							 * !isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate()))
+							 * { positions[counter] = targetPos; counter++; }
+							 */
 							break;
 						}
 
@@ -271,6 +283,8 @@ public class ChessBoard {
 						targetPos = new Position(targetCol, targetRow);
 
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -289,6 +303,8 @@ public class ChessBoard {
 					if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
 						targetPos = new Position(targetCol, targetRow);
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -308,6 +324,8 @@ public class ChessBoard {
 					if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
 						targetPos = new Position(targetCol, targetRow);
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -358,6 +376,8 @@ public class ChessBoard {
 					if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
 						targetPos = new Position(targetCol, targetRow);
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -377,6 +397,8 @@ public class ChessBoard {
 						targetPos = new Position(targetCol, targetRow);
 
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -396,6 +418,8 @@ public class ChessBoard {
 						targetPos = new Position(targetCol, targetRow);
 
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -414,6 +438,8 @@ public class ChessBoard {
 					if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
 						targetPos = new Position(targetCol, targetRow);
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -432,6 +458,8 @@ public class ChessBoard {
 
 					targetPos = new Position(targetCol, targetRow);
 					if (isBlocking(targetPos, currentPiece)) {// leave direction
+						anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+						checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
 						break;
 					}
 					if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -447,6 +475,8 @@ public class ChessBoard {
 
 					targetPos = new Position(targetCol, targetRow);
 					if (isBlocking(targetPos, currentPiece)) {// leave direction
+						anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+						checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
 						break;
 					}
 					if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -484,13 +514,33 @@ public class ChessBoard {
 				currentCol = currentStartSquare.getCol();
 				currentRow = currentStartSquare.getRow();
 
+				Position[] START_POSITIONS = { new Position(0, 6), new Position(1, 6), new Position(2, 6),
+						new Position(3, 6), new Position(4, 6), new Position(5, 6), new Position(6, 6),
+						new Position(7, 6), new Position(0, 1), new Position(1, 1), new Position(2, 1),
+						new Position(3, 1), new Position(4, 1), new Position(5, 1), new Position(6, 1),
+						new Position(7, 1) };// pawn start postiosn
+				// ENPASSENT_POSITIONS = {};
 				int numSpaces = 1; // how far it can go
 
-				Pawn tempPawn = (Pawn) currentPiece; // type cast
-				if (tempPawn.getIsFirstMove() == true) {
+				if (isDuplicate(START_POSITIONS, START_POSITIONS.length, currentPiece.getPosition())) { // current pos
+																										// is a start
+																										// pos->first
+					// move
 					numSpaces = 2;
 				}
-
+				/*
+				 * Pawn tempPawn = (Pawn) currentPiece; // type cast//check is first move
+				 * 
+				 * if (tempPawn.getStartPos().equals(currentPiece.getPosition())) {// not
+				 * working?===================== // if
+				 * (tempPawn.getStartPos().equals(currentStartSquare)) { // if current sqaure //
+				 * = start squre: can move 2
+				 * 
+				 * // if (tempPawn.getIsFirstMove() == true) { numSpaces = 2; // pawn at c5= pos
+				 * 24.c5 is not a start pos...way in define temp peices pos is // made...
+				 * System.out.println( "\n" + tempPawn.getStartPos() + " " +
+				 * currentPiece.getPosition() + " " + currentPiece); }
+				 */
 				// define forward//up for white. or down for black //calcuatel end positon
 
 				if (currentPiece.isWhite()) {// WHITE: UP //cols same, rows change
@@ -505,7 +555,7 @@ public class ChessBoard {
 							if (isBlocking(targetPos, currentPiece)) {// leave direction
 								break;
 							}
-							if (!isDuplicate(positions, counter, targetPos)) {
+							if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
 								positions[counter] = targetPos;
 								counter++;
 							}
@@ -523,7 +573,7 @@ public class ChessBoard {
 							if (isBlocking(targetPos, currentPiece)) {// leave direction
 								break;
 							}
-							if (!isDuplicate(positions, counter, targetPos)) {
+							if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
 								positions[counter] = targetPos;
 								counter++;
 							}
@@ -548,8 +598,26 @@ public class ChessBoard {
 						if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
 							targetPos = new Position(targetCol, targetRow);
 
-							if (isBlocking(targetPos, currentPiece) && !isDuplicate(positions, counter, targetPos)) {
-								// and color dif
+							/*
+							 * anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							 * checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter); if
+							 * (isBlocking(targetPos, currentPiece) && !isDuplicate(positions, counter,
+							 * targetPos) && !(isCheck() || isCheckMate())) { --might add it twice if use...
+							 */
+
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice //cant use chess peice
+																					// class
+							for (int m = 0; m < pieces.size(); m++) {// search for this other peice
+								if (pieces.get(m).getPosition().equals(targetPos)) {
+									anotherPiece = pieces.get(m);
+								}
+							}
+
+							if (isBlocking(targetPos, currentPiece) && !anotherPiece.isWhite()
+									&& !isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) { // and
+																														// color
+																														// dif
+
 								positions[counter] = targetPos;// positions.append(targetCol,targetRow);
 								counter++;
 							}
@@ -569,7 +637,21 @@ public class ChessBoard {
 
 						if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
 							targetPos = new Position(targetCol, targetRow);
-							if (isBlocking(targetPos, currentPiece) && !isDuplicate(positions, counter, targetPos)) {
+
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+
+							for (int m = 0; m < pieces.size(); m++) {// search for this other peice
+								if (pieces.get(m).getPosition().equals(targetPos)) {
+									anotherPiece = pieces.get(m);
+								}
+							}
+
+							if (isBlocking(targetPos, currentPiece) && !anotherPiece.isWhite()
+									&& !isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+								// and color dif
+
+								// if (isBlocking(targetPos, currentPiece) && !isDuplicate(positions, counter,
+								// targetPos)) {
 								// and color dif
 								positions[counter] = targetPos;// positions.append(targetCol,targetRow);
 								counter++;
@@ -583,7 +665,7 @@ public class ChessBoard {
 						// if (targetCol == BOARD_MIN || targetRow == BOARD_MAX) break;
 					}
 
-				} else if (!currentPiece.isWhite()) {
+				} else if (!currentPiece.isWhite()) {// black pawn
 
 					for (int i = 0; i <= 1; i++) { // down left //cols shrink, rows shrink
 						targetCol = currentCol - i;
@@ -591,7 +673,20 @@ public class ChessBoard {
 
 						if (targetCol >= BOARD_MIN && targetRow >= BOARD_MIN) {
 							targetPos = new Position(targetCol, targetRow);
-							if (isBlocking(targetPos, currentPiece) && !isDuplicate(positions, counter, targetPos)) {
+
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+
+							for (int m = 0; m < pieces.size(); m++) {// search for this other peice
+								if (pieces.get(m).getPosition().equals(targetPos)) {
+									anotherPiece = pieces.get(m);
+								}
+							}
+
+							if (isBlocking(targetPos, currentPiece) && anotherPiece.isWhite()
+									&& !isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+								// and color dif
+								// if (isBlocking(targetPos, currentPiece) && !isDuplicate(positions, counter,
+								// targetPos)) {
 								// and color dif
 								positions[counter] = targetPos;// positions.append(targetCol,targetRow);
 								counter++;
@@ -606,7 +701,18 @@ public class ChessBoard {
 
 						if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
 							targetPos = new Position(targetCol, targetRow);
-							if (isBlocking(targetPos, currentPiece) && !isDuplicate(positions, counter, targetPos)) {
+
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+
+							for (int m = 0; m < pieces.size(); m++) {// search for this other peice
+								if (pieces.get(m).getPosition().equals(targetPos)) {
+									anotherPiece = pieces.get(m);
+								}
+							}
+
+							if (isBlocking(targetPos, currentPiece) && anotherPiece.isWhite()
+									&& !isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+
 								// and color dif
 								positions[counter] = targetPos;// positions.append(targetCol,targetRow);
 								counter++;
@@ -677,6 +783,28 @@ public class ChessBoard {
 		}
 		return false;
 
+	}
+
+	public void checkCanAttack(ChessPiece anotherPiece, Position targetPos, ChessPiece currentPiece,
+			Position[] positions, int counter) {
+		// can attack when colours dif. and is blocked by taht
+
+		// can attack
+
+		for (int m = 0; m < pieces.size(); m++) {// search for this other peice
+			if (pieces.get(m).getPosition().equals(targetPos)) {
+				anotherPiece = pieces.get(m);
+			}
+		}
+
+		if ((!anotherPiece.isWhite() && currentPiece.isWhite())
+				|| (anotherPiece.isWhite() && !currentPiece.isWhite())) { // if dif colors
+			if (isBlocking(targetPos, currentPiece) && !isDuplicate(positions, counter, targetPos)
+					&& !(isCheck() || isCheckMate())) {// if blocked - add to end postions
+				positions[counter] = targetPos;
+				counter++;
+			}
+		}
 	}
 
 	/**
