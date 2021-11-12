@@ -5,6 +5,53 @@
  */
 package Model;
 
+import java.util.ArrayList;
+
+/*
+ * TODO:
+//pawn idea:
+ * 
+ create insatnce var startSquare(). = each pawns indiv starting square-when crated--done - not need
+ 
+ if current postion != startsquare: then can move 1. //ist firstmove = false->  
+ else can move 2 --done
+ 
+ check enpassent -- look at currnet positon of current peice . if in enpassent square and enemy in right place: can enpassent = true. do enpassent
+ //use a conts to hold possible enpassent squraes?  --STILL NEED
+ 
+ if current postion is an end tile -> can change = true;- STILL NEED --fix endPostions array to be bottom and top row.dont change peice until move is done
+ 
+ if can change = true
+use pcies array - make pieices.get cuurent = new queen(pawn info) etc
+
+
+//when land on pice: attack: make peices array remove that piece - make it a none piece -STILLNEED--putin move() ? --dont put in can attack.onnly once peice is mpved, it gone from peices array 
+ 
+  =====
+  
+  idea for putting stuff back in seperate files--may  need to add dummy funcs to chesse(add duplicate and blocking) peice kight king rook--COULD DO
+  
+  board.gernate legla moves{
+  
+  if currentpiece= bishop: 
+temppeice = new bihpsop(currnet piece data)
+  
+  
+  curent can moves= temppeice.generatelegalMoves(pass what need to in here)
+  
+ else if pawn:
+  
+  else if queen:
+  
+  else... //other peices 
+  
+  
+  }
+ araylist gernalleglmoves(pieices etc){}
+ 
+bishop  gernate psudeo moves-- will still exisits but not do anything
+*/
+
 /*
  * trye commit only changed files? 
  * commit message:  
@@ -54,6 +101,7 @@ chessboard- small change to psduo code
  */
 
 //next step - double check all directions as intended-it is. practice has test cases working
+//note: gentarte psudo legal not used
 
 /*
  * commit 5
@@ -68,12 +116,49 @@ chessboard- small change to psduo code
 //if(is block ){ if(color is dif)-- postions.add(postion). set attacking = true //can go on that squre (to attack) but cant go past it} //do thisin every direcion check
 // should put in dif func to clean up code in generate legla moves-// can make a func - pass: currentStartSquare . current peice
 
+/*
+ * commit 6 
+ * chess board:legal moves-accomade for pawns first turn or not. 
+ *  chess board:legal moves- accomadate for landing on peice of opposite color - pawn ok(only land on diag of dif color)  
+ *  - queen and bishop land on  peices of dif color-- should be ok now.
+ *  chess board: added check can attack()
+ *  
+ *model test: some test cases added for chess board.
+
+ *  
+
+ *
+ */
+
+/*
+ * commmit 7
+//* added to pawn - migh tnot need
+ * 
+ *
+ * chesboard - legal moves- pawn can change to queen accounted for (actual changin not ) //mightnot ned?
+ * 
+ * 
+ * cheess board  -move - actual turn pawn to queen . - and atack peice (remove form peices aray) .added---untested--need gui for more test cases
+ * 
+ * chess piece - added is equal()
+ * 
+ * cleaned up chess board legal move with helper funcs--check if this is equiv using test cases... --its not 
+ */
+
+//to celan could add LooskleftBIshop() funcs etc lookrightBIhosp(); - not work 
+// new func in pawn.java--unused /// * ned to add not check to pawn -done
+
+//next: test can attack/legal mvoes for queen and bihosp is ok 
+
+//next: can help with check/checkmate--commit changes first
 /**
  *
  * @author zamil, Phoebe
  */
 class Pawn extends ChessPiece {
 	private boolean isFirstMove, isAttacking, canChange, canEnPassant;// is atack /can attack
+	private Position startPos;
+	private ArrayList<Position> canChangePosition;
 
 	public Pawn(boolean isWhite, Position pos) {
 		super(isWhite, pos);
@@ -82,6 +167,10 @@ class Pawn extends ChessPiece {
 		isAttacking = false;
 		canChange = false;
 		canEnPassant = false;
+
+		startPos = pos; // to check first move
+		canChangePosition = new ArrayList<Position>();// new Position(-1, -1); // nothing to start //make sure clean at
+														// some poitn? assuming moving anwywhere
 	}
 
 	@Override
@@ -290,7 +379,7 @@ class Pawn extends ChessPiece {
 		canChange = set;
 	}
 
-	public boolean getCanChange(boolean set) {
+	public boolean getCanChange() {
 		return canChange;
 	}
 
@@ -298,7 +387,30 @@ class Pawn extends ChessPiece {
 		canEnPassant = set;
 	}
 
-	public boolean getCanEnPassant(boolean set) {
+	public boolean getCanEnPassant() {
 		return canEnPassant;
 	}
+
+	public void setStartPos(Position sp) {
+		startPos = sp;
+	}
+
+	public Position getStartPos() {
+		return startPos;
+	}
+
+	public void addCanChangePos(Position ccp) {
+		// canChangePosition = ccp;
+		canChangePosition.add(ccp); // max 3 elems
+	}
+
+	public ArrayList<Position> getCanChangePos() {
+		return canChangePosition;
+	}
+
+	public void cleanCanChangePos() { // reset list
+		for (Position p : canChangePosition)
+			canChangePosition.remove(p); // max 3 elems
+	}
+
 }

@@ -169,6 +169,67 @@ public class ChessBoard {
 		updateRow(startSquare.getRow());
 		updateRow(targetSquare.getRow());
 
+		/// added:
+		// once a move is done: delte attacked peice for piecies
+		// change pawn if need be.
+
+		/*
+		 * if curent piece = PAWN and duplicate (getcurrentpos , endpostion)_> //or get
+		 * end can change change
+		 * 
+		 * if current peice.can attack() = true; //and another peice.isattacked = true?
+		 * for peices if another peice.pos == current pice .pos and is not another peice
+		 * peices.remove another peice;
+		 */
+
+		// int BOARD_MAX = 7, BOARD_MIN = 0;
+
+		ChessPiece currentPiece;
+		ChessPiece anotherPiece;// attacekd piece
+
+		Position currentStartSquare, anotherStartSquare;
+		// Position currentTargetSquare;
+
+		String currentPieceType;
+
+		Position[] END_POSITIONS = { new Position(0, 0), new Position(1, 0), new Position(2, 0), new Position(3, 0),
+				new Position(4, 0), new Position(5, 0), new Position(6, 0), new Position(7, 0), new Position(0, 7),
+				new Position(1, 7), new Position(2, 7), new Position(3, 7), new Position(4, 7), new Position(5, 7),
+				new Position(6, 7), new Position(7, 7) };// pawn end postiosn-if land on - will become a queen
+
+		for (int num1 = 0; num1 < pieces.size(); num1++) { // for all peices
+			// current peice
+			currentPiece = pieces.get(num1);
+			currentStartSquare = currentPiece.getPosition();
+			currentPieceType = currentPiece.getType().toString();
+
+			// dont need can change bool or array..
+			if (currentPieceType.equals("PAWN")
+					&& isDuplicate(END_POSITIONS, END_POSITIONS.length, currentPiece.getPosition())) {// change pawn to
+																										// queen
+
+				currentPiece = new Queen(currentPiece.isWhite(), currentPiece.getPosition());
+				// the actual change into queen //--only after actual move
+
+			} else {
+
+				for (int num2 = 0; num2 < pieces.size(); num2++) { // for all peices
+					anotherPiece = pieces.get(num2);
+
+					anotherStartSquare = currentPiece.getPosition();
+
+					if (currentStartSquare.equals(anotherStartSquare) && !currentPiece.equals(anotherPiece)) {
+						// if same start psiitsno //check attacking
+
+						pieces.remove(anotherPiece);
+						// or peices.get i = none peice?
+
+					}
+				}
+
+			}
+		}
+
 	}
 
 	public boolean isCheck() { // dummy funcs
@@ -183,7 +244,8 @@ public class ChessBoard {
 	 * 
 	 * @return A list of strings(?) containing the moves
 	 */
-	public Move[] generateLegalMoves() {
+
+	public Move[] generateLegalMoves() { // works - but meesy
 
 		// need use peixes array list for all peices
 
@@ -520,6 +582,14 @@ public class ChessBoard {
 						new Position(3, 1), new Position(4, 1), new Position(5, 1), new Position(6, 1),
 						new Position(7, 1) };// pawn start postiosn
 				// ENPASSENT_POSITIONS = {};
+
+				// end postions... i,0 and i,7 ? //put end postiosn as another case?-no
+				Position[] END_POSITIONS = { new Position(0, 0), new Position(1, 0), new Position(2, 0),
+						new Position(3, 0), new Position(4, 0), new Position(5, 0), new Position(6, 0),
+						new Position(7, 0), new Position(0, 7), new Position(1, 7), new Position(2, 7),
+						new Position(3, 7), new Position(4, 7), new Position(5, 7), new Position(6, 7),
+						new Position(7, 7) };// pawn end postiosn-if land on - will become a queen
+
 				int numSpaces = 1; // how far it can go
 
 				if (isDuplicate(START_POSITIONS, START_POSITIONS.length, currentPiece.getPosition())) { // current pos
@@ -528,6 +598,30 @@ public class ChessBoard {
 					// move
 					numSpaces = 2;
 				}
+
+				if (isDuplicate(END_POSITIONS, END_POSITIONS.length, currentPiece.getPosition())) {
+					// currentPiece = new Pawn(currentPiece.isWhite(), currentPiece.getPosition());
+					// currentPiece.canChange() = true;
+					;
+
+					// currentPiece = new Queen(currentPiece.isWhite(), currentPiece.getPosition());
+					// //not yet--only after actual move
+					// exit this case... since its no longer a queen -- make it if pawn{else if pawn
+					// and end postion}...
+					Pawn tempPawn = (Pawn) currentPiece;
+					tempPawn.setCanChange(true); // how relate this to actual peice?
+
+					tempPawn.addCanChangePos(currentPiece.getPosition());
+					// tempPawn.setCanChangePos = currentPiece.getPosition();
+					currentPiece = tempPawn; // shoudl be same but can change true now
+
+				} else { // just one end postions(out of posbiel 3 (forawrd diag 1 diag 2)) need to match
+							// -> that end postion can
+							// change...
+					// set false?
+					;
+				}
+
 				/*
 				 * Pawn tempPawn = (Pawn) currentPiece; // type cast//check is first move
 				 * 
@@ -722,6 +816,9 @@ public class ChessBoard {
 					}
 
 				}
+
+				// clear can change array?
+				// currentPiece.cleanCanChangePos();
 
 				// copy array of correct size
 				Position positionsAns[] = new Position[counter]; // current array size used up
