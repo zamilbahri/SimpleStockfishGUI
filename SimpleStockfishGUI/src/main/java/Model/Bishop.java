@@ -19,9 +19,18 @@ class Bishop extends ChessPiece {
 	}
 
 	public boolean isValidPath(Position targetPos) { // works:up left.//not work: up right
+		// System.out.println(pieces.get(0));
 		return true;
 	}
 
+	/*
+	 * public Position[] generatePseudoLegalMoves() { return generateLegalMoves(); }
+	 * 
+	 * public Position[] generateLegalMoves() { // same but needed another pice..
+	 * how pass that and override it?...
+	 * 
+	 * }
+	 */
 	@Override
 	public Position[] generatePseudoLegalMoves() { // wihtout using isvalid //asumes peicies not in way
 
@@ -50,7 +59,7 @@ class Bishop extends ChessPiece {
 					counter++;
 				}
 			}
-			if (targetCol == BOARD_MAX || targetRow == BOARD_MAX)
+			if (targetCol == BOARD_MAX || targetRow == BOARD_MAX)// ||targetPos =peices.get(j)))
 				break;
 		}
 
@@ -132,6 +141,11 @@ class Bishop extends ChessPiece {
 	@Override
 	public boolean isWhite() {
 		return super.isWhite();
+	}
+
+	@Override
+	public Position getPosition() {
+		return super.getPosition();
 	}
 
 	public void setIsAttacking(boolean set) { /// can check start postion is not current postion ?

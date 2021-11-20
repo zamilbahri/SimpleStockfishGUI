@@ -232,8 +232,76 @@ public class ChessBoard {
 
 	}
 
+	public int makeCheck(ChessPiece anotherPiece) { // find which color is in check
+		// check if you in check cuz of other color move?->(outside of this func) this
+		// team must then move out of check from start postion . (must call this for end
+		// positon and make 0 or toher team )
+
+		Position endPosition, wKingPosition, bKingPosition;
+
+		int colorInCheck = 0; // 1 = white in check. 2 = balck in check . 0 - none in check
+
+		endPosition = anotherPiece.getPosition(); // this is start ppos should be where end pos..// wherre antoehr
+													// peices can end its turn = end positon;
+
+		wKingPosition = new Position(-1, -1); // or use king start position
+		bKingPosition = new Position(-1, -1);
+
+		for (int i = 0; i < pieces.size(); i++) { // find kings
+
+			if (pieces.get(i).getType().toString().equals("KING") && pieces.get(i).isWhite()) {
+				wKingPosition = pieces.get(i).getPosition(); // found white king
+			}
+			if (pieces.get(i).getType().toString().equals("KING") && !pieces.get(i).isWhite()) {
+				bKingPosition = pieces.get(i).getPosition(); // found black king
+			}
+
+		}
+
+		// another(attacking) peice is opp color and end postion = king positon
+		// if peice can land on king sqre->other color is in check
+
+		if (!anotherPiece.isWhite() && endPosition.equals(wKingPosition)) {
+			colorInCheck = 1; // balck can land on white king
+		} else if (anotherPiece.isWhite() && endPosition.equals(bKingPosition)) {
+			colorInCheck = 2; // white land on balck king
+
+		}
+		return colorInCheck; // which team is currently in check
+	}
+
+	public boolean isCheck(ChessPiece currentpeice, ChessPiece anotherPiece) { // dummy funcs
+		// check if your move makes yourself in check( your king atackatble) - cant do -
+
+		// where another peice is...opp color? and all possible moves of opp team after
+		// you fake move? //call gernate legal mvoes again? where peices array shows
+		// the fake move done?--need revert after..
+
+		// if you white and make white in check after moving->true (cant do it)
+		// if your coloru = white and your fake move -> make check = 1: cant do
+		// it(return true;)
+		// if you corlr = balck and make check = 2: cant do it
+
+		if (currentpeice.isWhite() && makeCheck(anotherPiece) == 1
+				|| (!currentpeice.isWhite() && makeCheck(anotherPiece) == 2))
+			return true;
+
+		return false; // 0 or other colour in check
+
+	}
+
 	public boolean isCheck() { // dummy funcs
+
 		return false;
+
+		/*
+		 * // cases // check if open on each direcion? or knight jumP? //king surrounded
+		 * by 8 squres.if all 8 squres opn:if enemy queeen along any of them: this king
+		 * in check
+		 * 
+		 * many cases...
+		 * 
+		 */
 	}
 
 	public boolean isCheckMate() {
@@ -266,6 +334,7 @@ public class ChessBoard {
 		String currentPieceType;
 
 		int counter = 0;// current size-of positions
+		int counterTemp = 0;
 		Position positions[] = new Position[100]; // end positions
 		Position targetPos = new Position(-1, -1);
 
@@ -312,7 +381,8 @@ public class ChessBoard {
 							 * currentPiece.setAttacking(true); }
 							 */
 							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
-							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
+							counterTemp = counter;
+							counter = checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counterTemp);
 
 							/*
 							 * // can attack anotherPiece = new Pawn(true, new Position(-1, -1)); // default
@@ -346,7 +416,10 @@ public class ChessBoard {
 
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
 							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
-							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
+							counterTemp = counter;
+							counter = checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counterTemp);
+
+							// checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -366,7 +439,10 @@ public class ChessBoard {
 						targetPos = new Position(targetCol, targetRow);
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
 							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
-							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
+							counterTemp = counter;
+							counter = checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counterTemp);
+
+							// checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -387,7 +463,9 @@ public class ChessBoard {
 						targetPos = new Position(targetCol, targetRow);
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
 							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
-							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
+							counterTemp = counter;
+							counter = checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counterTemp);
+
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -439,7 +517,9 @@ public class ChessBoard {
 						targetPos = new Position(targetCol, targetRow);
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
 							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
-							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
+							counterTemp = counter;
+							counter = checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counterTemp);
+
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -460,7 +540,9 @@ public class ChessBoard {
 
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
 							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
-							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
+							counterTemp = counter;
+							counter = checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counterTemp);
+
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -481,7 +563,9 @@ public class ChessBoard {
 
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
 							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
-							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
+							counterTemp = counter;
+							counter = checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counterTemp);
+
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -501,7 +585,103 @@ public class ChessBoard {
 						targetPos = new Position(targetCol, targetRow);
 						if (isBlocking(targetPos, currentPiece)) {// leave direction
 							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
-							checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
+							counterTemp = counter;
+							counter = checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counterTemp);
+
+							break;
+						}
+						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+							positions[counter] = targetPos;
+							counter++;
+						}
+					}
+					if (targetCol == BOARD_MAX || targetRow == BOARD_MIN)
+						break;
+				}
+				// horiz/vertical moves
+
+				// right //cols change, rows same
+				for (int i = 0; i <= BOARD_MAX; i++) {
+					targetCol = currentCol + i;
+					targetRow = currentRow;// + i;
+
+					if (targetCol <= BOARD_MAX && targetRow <= BOARD_MAX) {
+						targetPos = new Position(targetCol, targetRow);
+						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							counterTemp = counter;
+							counter = checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counterTemp);
+
+							break;
+						}
+						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+							positions[counter] = targetPos;
+							counter++;
+						}
+					}
+					if (targetCol == BOARD_MAX || targetRow == BOARD_MAX)
+						break;
+				}
+
+				// left //cols change, rows same
+				for (int i = 0; i <= BOARD_MAX; i++) {
+					targetCol = currentCol - i;
+					targetRow = currentRow; // - i;
+
+					if (targetCol >= BOARD_MIN && targetRow >= BOARD_MIN) {
+						targetPos = new Position(targetCol, targetRow);
+
+						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							counterTemp = counter;
+							counter = checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counterTemp);
+
+							break;
+						}
+						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+							positions[counter] = targetPos;
+							counter++;
+						}
+					}
+					if (targetCol == BOARD_MIN || targetRow == BOARD_MIN)
+						break;
+				}
+
+				// up //cols same, rows change
+				for (int i = 0; i <= BOARD_MAX; i++) {
+					targetCol = currentCol; // - i;
+					targetRow = currentRow + i;
+
+					if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+						targetPos = new Position(targetCol, targetRow);
+
+						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							counterTemp = counter;
+							counter = checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counterTemp);
+
+							break;
+						}
+						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
+							positions[counter] = targetPos;
+							counter++;
+						}
+					}
+					if (targetCol == BOARD_MIN || targetRow == BOARD_MAX)
+						break;
+				}
+				// down //cols same, rows change
+				for (int i = 0; i <= BOARD_MAX; i++) {
+					targetCol = currentCol; // + i;
+					targetRow = currentRow - i;
+
+					if (targetCol >= BOARD_MIN && targetRow <= BOARD_MAX) {
+						targetPos = new Position(targetCol, targetRow);
+						if (isBlocking(targetPos, currentPiece)) {// leave direction
+							anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
+							counterTemp = counter;
+							counter = checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counterTemp);
+
 							break;
 						}
 						if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
@@ -513,41 +693,32 @@ public class ChessBoard {
 						break;
 				}
 
-				// horiz/vertical moves
-				for (int i = 0; i <= BOARD_MAX; i++) {// right/left //cols change, rows same
-					targetCol = i;
-					targetRow = currentRow;
-
-					targetPos = new Position(targetCol, targetRow);
-					if (isBlocking(targetPos, currentPiece)) {// leave direction
-						anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
-						checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
-						break;
-					}
-					if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
-						positions[counter] = targetPos;
-						counter++;
-					}
-
-				}
-
-				for (int i = 0; i <= BOARD_MAX; i++) {// up/down //cols same, rows change
-					targetCol = currentCol;
-					targetRow = i;
-
-					targetPos = new Position(targetCol, targetRow);
-					if (isBlocking(targetPos, currentPiece)) {// leave direction
-						anotherPiece = new Pawn(true, new Position(-1, -1)); // default peice
-						checkCanAttack(anotherPiece, targetPos, currentPiece, positions, counter);
-						break;
-					}
-					if (!isDuplicate(positions, counter, targetPos) && !(isCheck() || isCheckMate())) {
-						positions[counter] = targetPos;
-						counter++;
-					}
-
-				}
-
+				/*
+				 * // horiz/vertical moves --before blocking for (int i = 0; i <= BOARD_MAX;
+				 * i++) {// right/left //cols change, rows same targetCol = i; targetRow =
+				 * currentRow;
+				 * 
+				 * targetPos = new Position(targetCol, targetRow); if (isBlocking(targetPos,
+				 * currentPiece)) {// leave direction anotherPiece = new Pawn(true, new
+				 * Position(-1, -1)); // default peice checkCanAttack(anotherPiece, targetPos,
+				 * currentPiece, positions, counter); break; } if (!isDuplicate(positions,
+				 * counter, targetPos) && !(isCheck() || isCheckMate())) { positions[counter] =
+				 * targetPos; counter++; }
+				 * 
+				 * }
+				 * 
+				 * for (int i = 0; i <= BOARD_MAX; i++) {// up/down //cols same, rows change
+				 * targetCol = currentCol; targetRow = i;
+				 * 
+				 * targetPos = new Position(targetCol, targetRow); if (isBlocking(targetPos,
+				 * currentPiece)) {// leave direction anotherPiece = new Pawn(true, new
+				 * Position(-1, -1)); // default peice checkCanAttack(anotherPiece, targetPos,
+				 * currentPiece, positions, counter); break; } if (!isDuplicate(positions,
+				 * counter, targetPos) && !(isCheck() || isCheckMate())) { positions[counter] =
+				 * targetPos; counter++; }
+				 * 
+				 * }
+				 */
 				// copy array of correct size
 				Position positionsAns[] = new Position[counter];
 				for (int i = 0; i < counter; i++) {
@@ -882,8 +1053,8 @@ public class ChessBoard {
 
 	}
 
-	public void checkCanAttack(ChessPiece anotherPiece, Position targetPos, ChessPiece currentPiece,
-			Position[] positions, int counter) {
+	public int checkCanAttack(ChessPiece anotherPiece, Position targetPos, ChessPiece currentPiece,
+			Position[] positions, int counter) { // void
 		// can attack when colours dif. and is blocked by taht
 
 		// can attack
@@ -902,6 +1073,9 @@ public class ChessBoard {
 				counter++;
 			}
 		}
+
+		int newCounter = counter;
+		return newCounter;
 	}
 
 	/**

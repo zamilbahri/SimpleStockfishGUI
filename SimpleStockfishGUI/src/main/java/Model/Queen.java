@@ -161,6 +161,11 @@ class Queen extends ChessPiece {// Bishop{ //ChessPiece { //a bishop but more mo
 		return super.isWhite();
 	}
 
+	@Override
+	public Position getPosition() {
+		return super.getPosition();
+	}
+
 	public void setIsAttacking(boolean set) {
 		isAttacking = set;
 	}

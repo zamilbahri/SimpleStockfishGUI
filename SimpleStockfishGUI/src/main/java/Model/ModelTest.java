@@ -179,6 +179,97 @@ public class ModelTest {
 		 * expect d6d6 d6e7 d6f8 d6c5 d6c7 d6b8 d6e5 d6f4 d6g3 d6h2
 		 */
 		System.out.println("past 3 cases ok \n\n");
+
+		// case 5 -check queen is blocking - horiz and vert--ok
+		/*
+		 * 
+		 * 
+		 * eg queen at d5. panwn at b5. pawn at d2(opp oclor). pawn at d 8. pawn at
+		 * h5(opp color) quen can go diag d5d5 d5e6 d5f7 d5g8 d5c4 d5b3 d5a2 d5c6 d5b7
+		 * d5a8 d5e4 d5f3 d5g2 d5h1
+		 * 
+		 * ,c5 d5 e5 f5 g5 h5(need),d6 d7 d4d3 d2(need) --ok theortical fen :
+		 * 1nbpkb1r/p1p1p1pp/8/1p1q3P/8/8/3P3P/RNBQKBN1 w Qk - 0 1
+		 * 
+		 * 
+		 * 
+		 */
+
+		cb = new ChessBoard("1nbpkb1r/p1p1p1pp/8/1p1q3P/8/8/3P3P/RNBQKBN1 w Qk - 0 1");
+		System.out.println(cb);
+		moves = cb.generateLegalMoves();
+
+		for (Move move : moves) { // normal peices arrya
+			System.out.println(move.getMoveStr());
+		}
+
+		// case 6:check bishop is blocking--ok
+		/*
+		 * expect
+		 * 
+		 * 
+		 * f4f4 f4g5 f4e3 f4d2 f4c1 f4e5 f4g3 f4h2
+		 */
+		// 1n1pkb1r/p1p4p/3p1p2/1p1q2P1/5b2/2P5/7P/RNBQKBN1 w Qk - 0 1
+
+		cb = new ChessBoard("1n1pkb1r/p1p4p/3p1p2/1p1q2P1/5b2/2P5/7P/RNBQKBN1 w Qk - 0 1");
+		System.out.println(cb);
+		moves = cb.generateLegalMoves();
+
+		for (Move move : moves) { // normal peices arrya
+			System.out.println(move.getMoveStr());
+		}
+
+		// case 7: arbiarty (legal board) --check pawns,queens,bihosps
+		// rnb1kbnr/1p1p1p1p/5qp1/p1p1p3/P2P1B2/8/1PPQPPPP/RN2KBNR w KQkq - 0 1
+		/*
+		 * expect (these in particualr+coulple more):--ALL OK
+		 * 
+		 * c8c8 --bish 1
+		 * 
+		 * f8f8 --bish 2 f8e7 f8d6 f8g7 f8h6
+		 * 
+		 * b7b7 - pawn1 b7b6 b7b5
+		 * 
+		 * f7f7 - pawn 2
+		 * 
+		 * 
+		 * f6f6 - queen 1 f6g7 //ur f6e7 //ul f6d8 f6g5 //dr f6h4 f6e6 //l f6d6 f6c6
+		 * f6b6 f6a6 f6f5//d f6f4
+		 * 
+		 * //no up //no right //no dl
+		 * 
+		 * g6g6 pawn 3 g6g5 a5a5 //pawn 4
+		 * 
+		 * 
+		 * c5c5 //pawn 5 c5c4 c5d4
+		 * 
+		 * //pawn 6
+		 * 
+		 * e5e5 e5e4 e5d4 e5f4
+		 * 
+		 * //pawn 7 a4a4
+		 * 
+		 * //pawn 8 d4d4 d4d5 d4e5 d4c5
+		 * 
+		 * //bish f4f4 f4g5 f4h6 f4e3 f4e5 f4g3
+		 * 
+		 * //pawn b2b2 b2b3 b2b4
+		 * 
+		 * //queen //ur dl ul u d //no left, no right,no dr
+		 * 
+		 * d2d2 d2e3 d2c1 d2c3 d2b4 d2a5 d2d3 d2d1
+		 * 
+		 * pawn f2f2 f2f3 //bishop f1f1
+		 */
+		cb = new ChessBoard("rnb1kbnr/1p1p1p1p/5qp1/p1p1p3/P2P1B2/8/1PPQPPPP/RN2KBNR w KQkq - 0 1");
+		System.out.println(cb);
+		moves = cb.generateLegalMoves();
+
+		for (Move move : moves) { // normal peices arrya
+			System.out.println(move.getMoveStr());
+		}
+
 	}
 
 	public static void moveTester() {
@@ -216,6 +307,8 @@ public class ModelTest {
 		} // why is mutli stuff starting at same spot?
 
 		// System.out.println(ChessBoard.pieces.get(0).getPosition());
+
+		// =================test moving 1 peice? assuming legal?
 	}
 }
 

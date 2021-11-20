@@ -151,6 +151,21 @@ chessboard- small change to psduo code
 //next: test can attack/legal mvoes for queen and bihosp is ok 
 
 //next: can help with check/checkmate--commit changes first
+/*
+ * commmit 8
+ * 
+ * started chessboard is check --not sure how test/ impment...-. unfinished feature
+ *  
+ *  model test:checked queen is blocking/can attack. checked bishop - done . checked arbiarty board (pawn,bishop,queen all ok - ignores enpassent, ignores moving puts self in check)
+ *  
+ *  chessboard: : queen horize/vert movments  wrong in isblocking...made it more similar to bishop diags- start from that postions--fixed
+ *  
+ *  
+ *  
+ *  https://lichess.org/editor?fen=1nbpkb1r%2Fp1p1p1pp%2F8%2F1p1q3P%2F8%2F8%2F3P3P%2FRNBQKBN1+w+Qk+-+0+1
+ *  
+ *  for fen testss cases
+ */
 /**
  *
  * @author zamil, Phoebe
