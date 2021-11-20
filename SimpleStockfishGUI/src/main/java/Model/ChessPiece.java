@@ -7,10 +7,9 @@ package Model;
 
 /**
  *
- * @author zamil
+ * @author zamil, Phoebe
  */
 public abstract class ChessPiece {
-	public int BOARD_MAX = 7, BOARD_MIN = 0;// board dimension
 	private boolean isWhite; // true or false
 	Position pos;
 	Type type;
@@ -62,17 +61,24 @@ public abstract class ChessPiece {
 	 */
 	public abstract Position[] generatePseudoLegalMoves();
 
+	/**
+	 * @return a string visually representing the chessboard with all of its spaces
+	 *         and pieces
+	 */
 	@Override
 	public String toString() {
 		return String.format("{%s, (%s, %s), %s}", type, pos.getCol(), pos.getRow(), isWhite);
 	}
 
+	/**
+	 * @param obj
+	 *            an object to check if its equal
+	 * @return true if the chess piece is equal(same position, same color). false
+	 *         otherwise.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-
 		ChessPiece other = (ChessPiece) obj;
-		return (this.getPosition().equals(other.getPosition()) && this.isWhite() == other.isWhite());// this.isWhite().equals(other.isWhite())
-																										// );
-
+		return (this.getPosition().equals(other.getPosition()) && this.isWhite() == other.isWhite());
 	}
 }

@@ -7,7 +7,7 @@ package Model;
 
 /**
  *
- * @author zamil
+ * @author zamil ,Phoebe
  */
 public class Position {
 
@@ -115,9 +115,13 @@ public class Position {
 		return String.format("Algebraic: %s, Cartesian: (%d, %d), Index: %d", algebraic, col, row, index);
 	}
 
+	/**
+	 * @param obj
+	 *            an object to check if its equal
+	 * @return true if the position is equal(same row, same col). false otherwise.
+	 */
 	@Override
-	public boolean equals(Object obj) { // compare single postion
-		// typecast obj to Position s
+	public boolean equals(Object obj) {
 		Position p = (Position) obj;
 		return this.getRow() == p.getRow() && this.getCol() == p.getCol();
 	}

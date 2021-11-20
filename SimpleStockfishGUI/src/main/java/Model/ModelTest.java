@@ -53,11 +53,12 @@ public class ModelTest {
 		// practice.testerQueen();
 		// practice.testerPawn();
 
-		moveTester();
+		// moveTester();
 		testerBoard();
+		System.out.println("ALL TESTS OK");
 	}
 
-	public static void testerBoard() {
+	public static void testerBoard() { // test the chess board class- seeing how all peices can move
 
 		System.out.println(new Position(0, 0));// a1
 		System.out.println(new Position(7, 7)); // h8
@@ -221,6 +222,9 @@ public class ModelTest {
 		}
 
 		// case 7: arbiarty (legal board) --check pawns,queens,bihosps
+		// most important test-willknow if all peices move ok overall
+		// expect 76 moves total(for queen,bish,pawn)
+		// ==================================================================================================================
 		// rnb1kbnr/1p1p1p1p/5qp1/p1p1p3/P2P1B2/8/1PPQPPPP/RN2KBNR w KQkq - 0 1
 		/*
 		 * expect (these in particualr+coulple more):--ALL OK
