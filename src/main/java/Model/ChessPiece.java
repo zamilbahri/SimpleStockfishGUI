@@ -13,6 +13,9 @@ public abstract class ChessPiece {
     private boolean isWhite; // true or false
     Position pos;
     Type type;
+    
+    // Keep track of current space
+    Position currentSpace;
 
     public ChessPiece(boolean isWhite, Position pos) {
         this.isWhite = isWhite;
@@ -39,7 +42,7 @@ public abstract class ChessPiece {
      * @param targetPos the position where the Piece is considering moving to
      * @return a boolean indicating if the path is valid
      */
-    public abstract boolean isValidPath(Position targetPos);
+    public abstract boolean isValidPath(Position targetPos, ChessBoard newBoard);
     
     /**
      * Creates an array of all positions that the piece can move if the board
@@ -52,6 +55,7 @@ public abstract class ChessPiece {
     public String toString() {
         return String.format("{%s, (%s, %s), %s}", type, pos.getCol(), pos.getRow(), isWhite);
     }
+
     
     
     

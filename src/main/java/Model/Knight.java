@@ -5,6 +5,8 @@
  */
 package Model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author zamil
@@ -17,8 +19,54 @@ public class Knight extends ChessPiece {
     }
     
     @Override
-    public boolean isValidPath(Position targetPos) {
+    public boolean isValidPath(Position targetPos, ChessBoard newBoard) {
+    	ChessPiece targetPiece = targetPos.getNewPiece();
+    	if(targetPiece != null && targetPiece.isWhite()) {
+    		return false;
+    	}
         return true;
+    }
+    
+    public ArrayList<Position> KnightMoves(ChessBoard chessBoard){
+    	Position[][] newPosition = chessBoard.getSquare();
+    	ArrayList<Position> movement = new ArrayList<Position>();
+    	Position newSpace = currentSpace;
+    	int boardNumWidth = newSpace.getCol();
+    	int boardNumHeight = newSpace.getRow();
+    	// x axis
+    	int newCol = chessBoard.getWidth();
+    	// y axis
+    	int newRow = chessBoard.getHeight();
+    	
+    	// Still need to work on movement. Set right values.
+    	
+    	if ((newCol + 2) < boardNumWidth && (newRow + 1) < boardNumHeight) {
+    		movement.add(newPosition[newCol + 2][newRow + 1]);
+    	}
+    	if ((newCol + 1) < boardNumWidth && (newRow + 2) < boardNumHeight){
+    		movement.add(newPosition[newCol + 1][newRow + 2]);
+    	}
+    	if ((newCol - 1) < boardNumWidth && (newRow - 2) < boardNumHeight) {
+    		movement.add(newPosition[newCol - 1][newRow - 2]);
+    	}
+    	if ((newCol - 2) < boardNumWidth && (newRow - 1) < boardNumHeight) {
+    		movement.add(newPosition[newCol - 2][newRow - 1]);
+    	}
+    	if ((newCol + 2) > boardNumWidth && (newRow + 1) > boardNumHeight) {
+    		movement.add(newPosition[newCol + 2][newRow + 1]);
+    	}
+    	if ((newCol + 2) > boardNumWidth && (newRow + 1) > boardNumHeight) {
+    		movement.add(newPosition[newCol + 2][newRow + 1]);
+    	}
+    	if ((newCol + 2) > boardNumWidth && (newRow + 1) > boardNumHeight) {
+    		movement.add(newPosition[newCol + 2][newRow + 1]);
+    	}
+    	if ((newCol + 2) > boardNumWidth && (newRow + 1) > boardNumHeight) {
+    		movement.add(newPosition[newCol + 2][newRow + 1]);
+    	}
+    	
+    	
+    	return movement;
     }
 
     @Override

@@ -15,6 +15,7 @@ public class Position {
     private int row; // y axis
     private int index; // position in a 1-D array
     private String algebraic; // notation such as "d4"
+    private ChessPiece pieceLocation = null; // 
     
     /**
      * Converts Cartesian coordinates to algebraic notation
@@ -85,7 +86,7 @@ public class Position {
         this.algebraic = this.cartesianToAlgebraic(col, row);
         
     }
-
+   
     public void setRow(int row) {
         this.row = row;
     }
@@ -137,6 +138,20 @@ public class Position {
      */
     public int getIndex() {
         return index;
+    }
+    
+    // Methods added by Stephen
+    public void setNewPiece(ChessPiece setPiece) {
+    	pieceLocation = setPiece;
+    }
+    
+    public boolean isSpacetaken() {
+    	return (pieceLocation == null);
+    }
+    
+    // Null if no piece is taking up space
+    public ChessPiece getNewPiece() {
+		return pieceLocation;
     }
     
     

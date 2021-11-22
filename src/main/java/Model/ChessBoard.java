@@ -19,7 +19,10 @@ public class ChessBoard {
     private String fen; // = r3k2r/pp1b1ppp/1qnbpn2/2ppN3/3P1B2/1QPBP3/PP1N1PPP/R4RK1 w kq - 0 1
     public char[] pieceMap = new char[64];
     public ArrayList<ChessPiece> pieces = new ArrayList<>();
-    
+    boolean inCheck; // True if King is in check. False otherwise
+    private Position[][] squares;
+    private int boardNumWidth;
+    private int boardNumHeight;
     boolean turn; // indicates whose turn it is - white = 0, black = 1
     
     /** TODO:
@@ -31,6 +34,7 @@ public class ChessBoard {
      * Constructor to set up the chessboard in it's starting position
      */
     public ChessBoard() {
+    	inCheck = false;
         this.fen = DEFAULT_FEN;
         buildBoard();
     }
@@ -43,6 +47,41 @@ public class ChessBoard {
         this.fen = fen;
         buildBoard();
     }
+    
+    /**
+     * Initializes inCheck, width, and height
+     * 
+     * @param numWidth
+     * @param numHeight
+     */
+    public ChessBoard(int numWidth, int numHeight) {
+    	inCheck = false;
+    	boardNumWidth = numWidth;
+    	boardNumHeight = numHeight;
+    	squares = new Position[boardNumWidth][boardNumHeight];
+    	this.buildBoard();
+    }
+    
+    public int getWidth() {
+    	return boardNumWidth;
+    }
+    
+    public int getHeight() {
+    	return boardNumHeight;
+    }
+    
+    private static int checkPieces(char[][] new_board) {
+    	for (int i = 0; i < 8; i++) {
+    		for(int j = 0; j < 8; j++) {
+    			if(new_board[i][j] == 'k') {
+    				
+    			}
+    		}
+    	}	
+		return 0;	
+    }
+    
+    
     
     /**
      * Sets a custom FEN for the chessboard, then updates the pieceMap[]
@@ -100,6 +139,7 @@ public class ChessBoard {
                 col = 0;
             }
             
+            
             else if (Character.isLetter(c)) {
                 switch (c) {
                     case 'r', 'R' -> pieces.add(new Rook(Character.isUpperCase(c), new Position(index)));
@@ -115,6 +155,7 @@ public class ChessBoard {
                 pieceMap[index] = c;
                 col++;
             }
+            
             
             else if (Character.isDigit(c)) {
                 for (int j = 0; j < c-'0'; ++j) {
@@ -213,6 +254,8 @@ public class ChessBoard {
         List<String> fenList = Arrays.asList(fenArray);
         this.fen = String.join(" ", fenList);
     }
-    
+    public Position[][] getSquare(){
+    	return squares;
+    }
     
 }
