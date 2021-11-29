@@ -186,54 +186,47 @@ public class King extends ChessPiece {
     	
 		return false;
     }
-    private static boolean PawnPiece(char[][] setupBoard, char z, int i, int j) {
-		return false;
+	private static boolean PawnPiece(char[][] setupBoard, char z, int i, int j) {
     	
+		if (outOfBounds(i - 1, j - 1)
+                && setupBoard[i - 1][j - 1] == z)
+                return true;
+            if (outOfBounds(i - 1, j + 1)
+                && setupBoard[i - 1][j + 1] == z)
+                return true;
+    	return false;
     }
     private static boolean RookPiece(char[][] setupBoard, char z, int i, int j) {
     	
     	int a = 0;
-    	/*
-    	while(outOfBounds(i + ++a, j)) {
-    		if(setupBoard[][]) {
-    			
-    		}
-    		if(setupBoard[][]) {
-    			break;
-    		}
-    	}
-    	*/
     	
-    	/*
     	while(outOfBounds(i + ++a, j)) {
-    		if(setupBoard[][]) {
-    			
-    		}
-    		if(setupBoard[][]) {
-    			break;
+    		if(setupBoard[i + a][j] == z) {
+    			return true;
     		}
     	}
-    	*/
-    	/*
-    	while(outOfBounds(i + ++a, j)) {
-    		if(setupBoard[][]) {
-    			
+    	
+    	a = 0;
+    	while(outOfBounds(i + --a, j)) {
+    		if(setupBoard[i + a][j] == z) {
+    			return true;
     		}
-    		if(setupBoard[][]) {
-    			break;
-    		}
-    	}
-    	*/
-    	/*
-    	while(outOfBounds(i + ++a, j)) {
-    		if(setupBoard[][]) {
-    			
-    		}
-    		if(setupBoard[][]) {
-    			break;
+      	}
+    	
+    	a = 0;
+    	while(outOfBounds(i, j + ++a)) {
+    		if(setupBoard[i][j + a] == z) {
+    			return true;
     		}
     	}
-    	*/
+    	
+    	a = 0;
+    	while(outOfBounds(i, j + --a)) {
+    		if(setupBoard[i][j + a] == z) {
+    			return true;
+    		}
+    	}
+    	
     	return false;
     }
     
